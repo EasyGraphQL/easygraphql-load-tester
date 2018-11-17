@@ -1,0 +1,30 @@
+type Family {
+  name: String!
+  ages: [Int]!
+  user: User!
+}
+
+type Me {
+  id: ID!
+  email: String
+  username: [String]!
+  fullName: String!
+  result: Float
+  phone: [Int]!
+  apiKey: String!
+  users: [User]!
+  verified: Boolean!
+}
+
+type User {
+  email: String!
+  username: String!
+  fullName: String!
+  phone: String!
+  family: Family!
+}
+
+type Query {
+  getMe: Me
+  getUserByUsername(username: String!, id: Int!): User
+}

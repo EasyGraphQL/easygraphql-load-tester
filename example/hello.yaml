@@ -1,0 +1,20 @@
+config:
+  target: "http://localhost:5000/"
+  phases:
+    - duration: 5
+      arrivalRate: 1
+  processor: "./index.js"
+scenarios:
+  - name: "GraphQL Query load test"
+    flow:
+      - function: "testCases"
+      - loop:
+          - post:
+              url: "/"
+              json:
+                query: "{{ $loopElement.query }}"
+          - log: "----------------------------------"
+          - log: "Sent a request to the Query: {{ $loopElement.name }}"
+        over: cases
+
+    
