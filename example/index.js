@@ -16,7 +16,7 @@ const args = {
 }
 
 const automaticEGQL = new EasyGraphQLLoadTester(familySchema, args)
-const testCases = automaticEGQL.createQuery()
+const testCases = automaticEGQL.createTestCases()
 
 module.exports = {
   testCases

@@ -38,7 +38,7 @@ To use it, you must have your server running and follow the next steps:
     }
 
     const loadTester = new EasyGraphQLLoadTester(schema, args)
-    const testCases = loadTester.createQuery()
+    const testCases = loadTester.createTestCases()
 
     module.exports = {
       testCases
@@ -53,26 +53,47 @@ To use it, you must have your server running and follow the next steps:
   Install [Artillery.io](https://artillery.io/)
   create `yaml` file like this:
   
-  ```yaml
-    config:
-      target: "http://localhost:5000/"
-      phases:
-        - duration: 5
-          arrivalRate: 1
-      processor: "./index.js"
-    scenarios:
-      - name: "GraphQL Query load test"
-        flow:
-          - function: "testCases"
-          - loop:
-              - post:
-                  url: "/"
-                  json:
-                    query: "{{ $loopElement.query }}"
-              - log: "----------------------------------"
-              - log: "Sent a request to the Query: {{ $loopElement.name }}"
-            over: cases
-  ```
+    ```yaml
+      config:
+        target: "http://localhost:5000/"
+        phases:
+          - duration: 5
+            arrivalRate: 1
+        processor: "./index.js"
+      scenarios:
+        - name: "GraphQL Query load test"
+          flow:
+            - function: "testCases"
+            - loop:
+                - post:
+                    url: "/"
+                    json:
+                      query: "{{ $loopElement.query }}"
+                - log: "----------------------------------"
+                - log: "Sent a request to the Query: {{ $loopElement.name }}"
+              over: cases
+    ```
+
+3. Result
+  Something like this should be your result with this basic configuration
+   ```bash
+    All virtual users finished
+    Summary report @ 15:03:05(-0500) 2018-11-17
+      Scenarios launched:  5
+      Scenarios completed: 5
+      Requests completed:  40
+      RPS sent: 8.95
+      Request latency:
+        min: 1.2
+        max: 13
+        median: 2
+        p95: 6
+        p99: 13
+      Scenario counts:
+        GraphQL Query load test: 5 (100%)
+      Codes:
+        200: 40
+   ```
 
 ## Example
 You can check the [example](https://github.com/EasyGraphQL/easygraphql-load-tester/tree/master/example)
