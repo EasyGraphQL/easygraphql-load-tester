@@ -75,7 +75,7 @@ To use it, you must have your server running and follow the next steps:
   ```
 
 ## Example
-You can check the example [https://github.com/EasyGraphQL/easygraphql-load-tester/tree/master/example]
+You can check the [example](https://github.com/EasyGraphQL/easygraphql-load-tester/tree/master/example)
 
 # License
 ### The MIT License
