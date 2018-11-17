@@ -37,8 +37,8 @@ To use it, you must have your server running and follow the next steps:
       }
     }
 
-    const automaticEGQL = new EasyGraphQLLoadTester(schema, args)
-    const testCases = automaticEGQL.createQuery()
+    const loadTester = new EasyGraphQLLoadTester(schema, args)
+    const testCases = loadTester.createQuery()
 
     module.exports = {
       testCases
