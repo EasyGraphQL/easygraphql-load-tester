@@ -10,6 +10,8 @@ easygraphql-load-tester will create multiple queries that can be used with your 
 
 ## How to use it
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/EasyGraphQL/easygraphql-load-tester.svg)](https://greenkeeper.io/)
+
 ### install
 
 ```bash
