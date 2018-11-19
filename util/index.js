@@ -1,3 +1,6 @@
+/* eslint-disable valid-typeof */
+'use strict'
+
 const constants = require('./constants')
 
 function getField (field, schema, deepLevel = 0) {
@@ -43,8 +46,8 @@ function createQueryArguments (args, userArgs) {
   })
 
   let test = queryArgs.join(', ')
-  test = test.replace(/\"\[/g, '[')
-  test = test.replace(/\]\"/g, ']')
+  test = test.replace(/"\[/g, '[')
+  test = test.replace(/\]"/g, ']')
 
   return test
 }

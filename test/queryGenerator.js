@@ -28,20 +28,20 @@ describe('Query generator', () => {
   })
 
   it('Should throw an error if a arg is not defined', () => {
-    let error 
+    let error
     try {
       const args = {
         getUserByUsername: {
           username: 'Test'
         }
       }
-      
+
       const loadTest = new EasyGraphQLTester(schema, args)
       loadTest.createQuery()
     } catch (err) {
       error = err
     }
-    
+
     expect(error).to.exist
     expect(error.message).to.be.eq('id is required and it is not defined')
   })
