@@ -10,6 +10,7 @@
   },
   "husky": {
     "hooks": {
+      "pre-commit": "npm run standard",
       "pre-push": "npm run test"
     }
   },
