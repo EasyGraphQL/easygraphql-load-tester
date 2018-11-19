@@ -26,4 +26,23 @@ describe('Query generator', () => {
     expect(queries[0].name).to.includes('getMe')
     expect(queries[queries.length - 1].name).to.includes('getUserByUsername')
   })
+
+  it('Should throw an error if a arg is not defined', () => {
+    let error 
+    try {
+      const args = {
+        getUserByUsername: {
+          username: 'Test'
+        }
+      }
+      
+      const loadTest = new EasyGraphQLTester(schema, args)
+      loadTest.createQuery()
+    } catch (err) {
+      error = err
+    }
+    
+    expect(error).to.exist
+    expect(error.message).to.be.eq('id is required and it is not defined')
+  })
 })

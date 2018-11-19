@@ -4,7 +4,7 @@
   "description": "Create GrapgQL queries to use with test loaders.",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha",
+    "test": "nyc --check-coverage --lines 90 mocha",
     "standard": "standard",
     "standard-fix": "standard --fix"
   },
@@ -27,8 +27,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "graphql": "^14.0.2",
-    "lodash": "^4.17.11"
+    "easygraphql-parser": "0.0.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
