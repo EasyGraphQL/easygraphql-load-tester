@@ -38,7 +38,7 @@ To use it, you must have your server running and follow the next steps:
     }
 
     const loadTester = new EasyGraphQLLoadTester(schema, args)
-    const testCases = loadTester.createTestCases()
+    const testCases = loadTester.artillery()
 
     module.exports = {
       testCases
@@ -49,34 +49,41 @@ To use it, you must have your server running and follow the next steps:
 
   *If the arg is array it should be added as string `'["test 1", "test 2"]'`*
 
-2. Using Artillery.io
-  Install [Artillery.io](https://artillery.io/)
-  create `yaml` file like this:
-  
-    ```yaml
-      config:
-        target: "http://localhost:5000/"
-        phases:
-          - duration: 5
-            arrivalRate: 1
-        processor: "./index.js"
-      scenarios:
-        - name: "GraphQL Query load test"
-          flow:
-            - function: "testCases"
-            - loop:
-                - post:
-                    url: "/"
-                    json:
-                      query: "{{ $loopElement.query }}"
-                - log: "----------------------------------"
-                - log: "Sent a request to the Query: {{ $loopElement.name }}"
-              over: cases
-    ```
+2. Using [Artillery.io](https://artillery.io/):
 
-3. Result
+  ```shell
+  $ npm install -g artillery
+  ```
+  create `yml` file like this:
+  ```yml
+    config:
+      target: "http://localhost:5000/"
+      phases:
+        - duration: 5
+          arrivalRate: 1
+      processor: "./index.js"
+    scenarios:
+      - name: "GraphQL Query load test"
+        flow:
+          - function: "testCases"
+          - loop:
+              - post:
+                  url: "/"
+                  json:
+                    query: "{{ $loopElement.query }}"
+              - log: "----------------------------------"
+              - log: "Sent a request to the Query: {{ $loopElement.name }}"
+            over: cases
+  ```
+
+  If you named your `yml` file file `test`, run the test with:
+  ```shell
+  $ artillery run hello.yml
+  ```
+
+3. Result:
   Something like this should be your result with this basic configuration
-   ```bash
+   ```shell
     All virtual users finished
     Summary report @ 15:03:05(-0500) 2018-11-17
       Scenarios launched:  5
