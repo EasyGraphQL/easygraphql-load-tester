@@ -1,4 +1,4 @@
-const constants = require('.//constants')
+const constants = require('./constants')
 
 function getField (field, schema, deepLevel = 0) {
   deepLevel++
