@@ -8,6 +8,7 @@ const { expect } = require('chai')
 const EasyGraphQLTester = require('../lib')
 
 const schema = fs.readFileSync(path.join(__dirname, 'schema', 'schema.gql'), 'utf8')
+const search = fs.readFileSync(path.join(__dirname, 'schema', 'search.gql'), 'utf8')
 
 describe('Query generator', () => {
   it('Should initialize constructor', () => {
@@ -27,6 +28,23 @@ describe('Query generator', () => {
     expect(queries[queries.length - 1].name).to.includes('getUserByUsername')
   })
 
+  it('Should support union', () => {
+    const args = {
+      search: {
+        name: 'Test'
+      }
+    }
+    const loadTest = new EasyGraphQLTester(search, args)
+
+    const queries = loadTest.createQuery()
+
+    expect(queries).to.exist
+    expect(queries).to.be.a('array')
+    expect(queries[0].name).to.includes('search')
+    expect(queries[0].query).to.includes('... on Family')
+    expect(queries[0].query).to.includes('... on User')
+  })
+
   it('Should throw an error if a arg is not defined', () => {
     let error
     try {
@@ -43,6 +61,21 @@ describe('Query generator', () => {
     }
 
     expect(error).to.exist
-    expect(error.message).to.be.eq('id is required and it is not defined')
+    expect(error.message).to.be.eq('All query arguments must be defined')
+  })
+
+  it('Should throw an error if a arg is not defined', () => {
+    let error
+    try {
+      const args = {}
+
+      const loadTest = new EasyGraphQLTester(search, args)
+      loadTest.createQuery()
+    } catch (err) {
+      error = err
+    }
+
+    expect(error).to.exist
+    expect(error.message).to.be.eq('All query arguments must be defined')
   })
 })
