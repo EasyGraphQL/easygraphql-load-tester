@@ -1,0 +1,19 @@
+union SearchResult = Family | User
+
+type Family {
+  name: String!
+  ages: [Int]!
+  user: User!
+}
+
+type User {
+  email: String!
+  username: String!
+  fullName: String!
+  phone: String!
+  family: Family!
+}
+
+type Query {
+  search(name: String!): SearchResult!
+}
