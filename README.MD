@@ -1,7 +1,7 @@
 <h1 align="center">
-  <img src="https://cdn.rawgit.com/EasyGraphQL/easygraphql-mock/baab331c/EasyGraphQL.png" alt="EasyGraphQL Mock " width="350">
+  <img src="https://raw.githubusercontent.com/EasyGraphQL/easygraphql-now/master/logo.png" alt="EasyGraphQL Mock " width="350">
   <br>
-  EasyGraphQL Load Tester 
+    easygraphql-load-tester
   <br>
   <br>
 </h1>
@@ -15,7 +15,7 @@ easygraphql-load-tester will create multiple queries that can be used with your 
 ### install
 
 ```bash
-$ npm install --save easygraphql-load-tester
+$ npm install easygraphql-load-tester --save
 ```
 
 To use it, you must have your server running and follow the next steps:
