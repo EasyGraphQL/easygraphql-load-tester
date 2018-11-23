@@ -16,7 +16,21 @@ const args = {
 }
 
 const automaticEGQL = new EasyGraphQLLoadTester(familySchema, args)
-const testCases = automaticEGQL.artillery()
+
+const queries = [
+  {
+    name: 'invalidQuery',
+    query: `
+      {
+        invalidQuery {
+          name
+        }
+      }
+    `
+  }
+]
+
+const testCases = automaticEGQL.artillery(queries)
 
 module.exports = {
   testCases
