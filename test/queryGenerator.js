@@ -16,6 +16,12 @@ describe('Query generator', () => {
       getUserByUsername: {
         username: 'Test',
         id: 1
+      },
+      getUser: {
+        where: {
+          id: '1',
+          name: 'demo'
+        }
       }
     }
     const loadTest = new EasyGraphQLTester(schema, args)
@@ -25,7 +31,8 @@ describe('Query generator', () => {
     expect(queries).to.exist
     expect(queries).to.be.a('array')
     expect(queries[0].name).to.includes('getMe')
-    expect(queries[queries.length - 1].name).to.includes('getUserByUsername')
+    expect(queries[queries.length - 1].name).to.includes('getUser')
+    expect(queries[queries.length - 1].name).to.includes('where: {')
   })
 
   it('Should initialize constructor with custom query', () => {
@@ -33,6 +40,12 @@ describe('Query generator', () => {
       getUserByUsername: {
         username: 'Test',
         id: 1
+      },
+      getUser: {
+        where: {
+          id: '1',
+          name: 'demo'
+        }
       }
     }
     const loadTest = new EasyGraphQLTester(schema, args)
@@ -53,7 +66,8 @@ describe('Query generator', () => {
     expect(queries).to.be.a('array')
     expect(queries[0].name).to.includes('myNewQuery')
     expect(queries[1].name).to.includes('getMe')
-    expect(queries[queries.length - 1].name).to.includes('getUserByUsername')
+    expect(queries[queries.length - 1].name).to.includes('getUser')
+    expect(queries[queries.length - 1].name).to.includes('where: {')
   })
 
   it('Should support union', () => {

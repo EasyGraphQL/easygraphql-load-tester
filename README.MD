@@ -82,6 +82,12 @@ const args = {
   },
   search: {
     id: '1'
+  },
+  searchUser: {
+    where: {
+      id: '1',
+      name: 'demo'
+    }
   }
 }
 

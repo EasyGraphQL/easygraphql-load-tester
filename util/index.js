@@ -1,6 +1,7 @@
 /* eslint-disable valid-typeof */
 'use strict'
 
+const isObject = require('lodash.isobject')
 const constants = require('./constants')
 
 function getField (field, schema, maxDeepLevel = 5, deepLevel = 0) {
@@ -41,7 +42,13 @@ function createQueryArguments (args, userArgs) {
 
       let userArg
 
-      if (typeof selectedArg !== constants.boolean && typeof selectedArg !== constants.number) {
+      if (isObject(selectedArg)) {
+        const nestedArgs = []
+        for (const key of Object.keys(selectedArg)) {
+          nestedArgs.push(`${key}: "${selectedArg[key]}"`)
+        }
+        userArg = `{${nestedArgs.join(', ')}}`
+      } else if (typeof selectedArg !== constants.boolean && typeof selectedArg !== constants.number) {
         userArg = `"${userArgs[arg.name]}"`
       } else {
         userArg = selectedArg

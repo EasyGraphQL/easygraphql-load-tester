@@ -12,6 +12,9 @@ const args = {
     test: '["a", "b"]',
     age: 10,
     name: 'test'
+  },
+  searchUser: {
+    name: 'demo'
   }
 }
 
@@ -19,10 +22,10 @@ const automaticEGQL = new EasyGraphQLLoadTester(familySchema, args)
 
 const queries = [
   {
-    name: 'invalidQuery',
+    name: 'searchUser(name: "demo")',
     query: `
       {
-        invalidQuery {
+        searchUser(name: "demo") {
           name
         }
       }

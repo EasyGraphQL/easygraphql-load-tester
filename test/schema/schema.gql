@@ -24,7 +24,13 @@ type User {
   family: Family!
 }
 
+input UserInfoInput {
+  id: ID!
+  name: String!
+}
+
 type Query {
   getMe: Me
   getUserByUsername(username: String!, id: Int!): User
+  getUser(where: UserInfoInput!): User
 }
