@@ -6,103 +6,243 @@
   <br>
 </h1>
 
-easygraphql-load-tester will create multiple queries that can be used with your favorite load testing library.
+easygraphql-load-tester is node library created to make load testing on GraphQL based on the schema; 
+it'll create a bunch of queries, that are going to be the ones used to test your server.
 
 ## How to use it
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/EasyGraphQL/easygraphql-load-tester.svg)](https://greenkeeper.io/)
 
-### install
+`easygraphql-load-tester` can be used in two ways for the moment; the first one is 
+using `.artillery()` with a [artillery](https://artillery.io) setup, or the second 
+one is `.createQuery()` that'll create the queries, so you can use with your favorite load tester.
 
-```bash
-$ npm install easygraphql-load-tester --save
++ Import `easygraphql-load-tester` package.
++ Read the schema.
++ Initialize the tester, and pass the schema as the first argument.
+  + If there are multiples schemas pass an array with the schemas an argument.
+  + **Note**: In order to use multiples schema files, the queries and mutations must be extended.  + 
++ The second argument is the arguments on the queries, **only** if there are some of them.
+  + **Note**: If an argument is an array it should be passed as an `string`, e.g: `'["name", "name 2"]'`
+
+
+### One schema file
+```js
+'use strict' 
+
+const EasyGraphQLLoadTester = require('easygraphql-load-tester')
+const fs = require('fs')
+const path = require('path')
+
+const userSchema = fs.readFileSync(path.join(__dirname, 'schema', 'user.gql'), 'utf8')
+
+const loadTester = new EasyGraphQLLoadTester(userSchema)
 ```
 
-To use it, you must have your server running and follow the next steps:
+### Multiples schemas files
+```js
+'use strict' 
 
-1. Initialize the class, pass the schema and export test cases
-   ```js
-    'use strict'
+const EasyGraphQLLoadTester = require('easygraphql-load-tester')
+const fs = require('fs')
+const path = require('path')
 
-    const fs = require('fs')
-    const path = require('path')
-    const EasyGraphQLLoadTester = require('easygraphql-load-tester')
+const userSchema = fs.readFileSync(path.join(__dirname, 'schema', 'user.gql'), 'utf8')
+const familySchema = fs.readFileSync(path.join(__dirname, 'schema', 'family.gql'), 'utf8')
 
-    const schema = fs.readFileSync(path.join(__dirname, 'schema.gql'), 'utf8')
+const loadTester = new EasyGraphQLLoadTester([userSchema, familySchema])
+```
 
-    const args = {
-      getFamilyInfo: {
-        isLocal: true,
-        lastNames: '["test 1", "test 2"]',
-        age: 20,
-        name: 'test'
+## Artillery
+
+To use with [artillery](https://artillery.io), you must have it installed, in case you don't have it
+just run:
+
+```shell
+$ npm install artillery -g
+```
+
+### index.js
+You should configure your `index.js` file:
+
+```js
+'use strict' 
+
+const EasyGraphQLLoadTester = require('easygraphql-load-tester')
+const fs = require('fs')
+const path = require('path')
+
+const userSchema = fs.readFileSync(path.join(__dirname, 'schema', 'user.gql'), 'utf8')
+const familySchema = fs.readFileSync(path.join(__dirname, 'schema', 'family.gql'), 'utf8')
+
+
+const args = {
+  getMeByTestResult: {
+    result: 4
+  },
+  search: {
+    id: '1'
+  }
+}
+
+const loadTester = new EasyGraphQLLoadTester([userSchema, familySchema], args)
+
+const testCases = loadTester.artillery()
+
+module.exports = {
+  testCases
+}
+```
+
+#### Custom queries
+You can pass custom queries to test on your load test, to do it, you must create an
+array of objects:
+
+```js
+const queries = [
+  {
+    name: '<NAME_OF_QUERY_TO_TEST>',
+    query: '<YOUR_CUSTOM_QUERY>'
+  }
+]
+
+```
+
+and then pass it as the first argument to `loadTester.artillery(queries)`.
+the query arguments object so the other queries can access them.
+
+##### Example:
+
+```js
+const queries = [
+  {
+    name: 'searchUser(id: "1")',
+    query: `
+      {
+        searchUser(id: "1") {
+          name
+        }
       }
-    }
+    `
+  }
+]
 
-    const loadTester = new EasyGraphQLLoadTester(schema, args)
-    const testCases = loadTester.artillery()
+const testCases = automaticEGQL.artillery(queries)
+```
 
-    module.exports = {
-      testCases
-    }
-   ```
+### artillery.yml
+The artillery file should have this minimum configuration, you can add yours in case it is needed:
 
-  If the Query receives arguments, those should be defined and pass to the class as second arg.
+```yml
+config:
+    target: "http://localhost:5000/"
+    phases:
+      - duration: 5
+        arrivalRate: 1
+    processor: "./index.js"
+  scenarios:
+    - name: "GraphQL Query load test"
+      flow:
+        - function: "testCases"
+        - loop:
+            - post:
+                url: "/"
+                json:
+                  query: "{{ $loopElement.query }}"
+            - log: "----------------------------------"
+            - log: "Sent a request to the Query: {{ $loopElement.name }}"
+          over: cases
+```
+*In this case the server is running on http://localhost:5000/*
 
-  *If the arg is array it should be added as string `'["test 1", "test 2"]'`*
+### How to run it
 
-2. Using [Artillery.io](https://artillery.io/):
+To run your load test, just run:
 
-  ```shell
-  $ npm install -g artillery
-  ```
-  create `yml` file like this:
-  ```yml
-    config:
-      target: "http://localhost:5000/"
-      phases:
-        - duration: 5
-          arrivalRate: 1
-      processor: "./index.js"
-    scenarios:
-      - name: "GraphQL Query load test"
-        flow:
-          - function: "testCases"
-          - loop:
-              - post:
-                  url: "/"
-                  json:
-                    query: "{{ $loopElement.query }}"
-              - log: "----------------------------------"
-              - log: "Sent a request to the Query: {{ $loopElement.name }}"
-            over: cases
-  ```
+```shell
+$ artillery run artillery.yml
+```
 
-  If you named your `yml` file file `test`, run the test with:
-  ```shell
-  $ artillery run hello.yml
-  ```
+### Result
 
-3. Result:
-  Something like this should be your result with this basic configuration
-   ```shell
-    All virtual users finished
-    Summary report @ 15:03:05(-0500) 2018-11-17
-      Scenarios launched:  5
-      Scenarios completed: 5
-      Requests completed:  40
-      RPS sent: 8.95
-      Request latency:
-        min: 1.2
-        max: 13
-        median: 2
-        p95: 6
-        p99: 13
-      Scenario counts:
-        GraphQL Query load test: 5 (100%)
-      Codes:
-        200: 40
-   ```
+The result is going to be something like this if you apply the basic configuration
+```shell
+ All virtual users finished
+ Summary report @ 15:03:05(-0500) 2018-11-17
+   Scenarios launched:  5
+   Scenarios completed: 5
+   Requests completed:  40
+   RPS sent: 8.95
+   Request latency:
+     min: 1.2
+     max: 13
+     median: 2
+     p95: 6
+     p99: 13
+   Scenario counts:
+     GraphQL Query load test: 5 (100%)
+   Codes:
+     200: 40
+```
+
+## Success cases
+
+If you want to share your success case using [`easygraphql-load-tester`](https://github.com/EasyGraphQL/easygraphql-load-tester)
+feel free to create a [PR](https://github.com/EasyGraphQL/easygraphql-load-tester/pulls) so the community
+can learn from your story.
+
+## Importance of using dataloaders
+
+Some time ago I was working on a GraphQL project that includes activities and 
+each activity can have some comments with the info of the user that created the comment. 
+The first thing that you might think is that it is a problem of query n + 1 , and yes; it is!
+
+I decided to implement dataloaders but for some reason, there was an error on the 
+implementation, so it wasn't caching the query and the result was a lot of 
+request to the database. After finding that issue I implemented it on the right 
+way reducing the queries to the database from 46 to 6.
+
+### Results without dataloaders
+
+```shell
+All virtual users finished
+Summary report @ 10:07:55(-0500) 2018-11-23
+  Scenarios launched:  5
+  Scenarios completed: 5
+  Requests completed:  295
+  RPS sent: 36.88
+  Request latency:
+    min: 1.6
+    max: 470.9
+    median: 32.9
+    p95: 233.2
+    p99: 410.8
+  Scenario counts:
+    GraphQL Query load test: 5 (100%)
+  Codes:
+    200: 295
+```
+
+### Results with dataloaders
+
+```shell
+All virtual users finished
+Summary report @ 10:09:09(-0500) 2018-11-23
+  Scenarios launched:  5
+  Scenarios completed: 5
+  Requests completed:  295
+  RPS sent: 65.85
+  Request latency:
+    min: 1.5
+    max: 71.9
+    median: 3.3
+    p95: 19.4
+    p99: 36.2
+  Scenario counts:
+    GraphQL Query load test: 5 (100%)
+  Codes:
+    200: 295
+```
 
 ## Example
 You can check the [example](https://github.com/EasyGraphQL/easygraphql-load-tester/tree/master/example)

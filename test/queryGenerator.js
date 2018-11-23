@@ -28,6 +28,34 @@ describe('Query generator', () => {
     expect(queries[queries.length - 1].name).to.includes('getUserByUsername')
   })
 
+  it('Should initialize constructor with custom query', () => {
+    const args = {
+      getUserByUsername: {
+        username: 'Test',
+        id: 1
+      }
+    }
+    const loadTest = new EasyGraphQLTester(schema, args)
+
+    const myQueries = [
+      {
+        name: 'myNewQuery',
+        query: `{
+          myNewQuery {
+            test
+          }
+        }`
+      }
+    ]
+    const queries = loadTest.createQuery(myQueries)
+
+    expect(queries).to.exist
+    expect(queries).to.be.a('array')
+    expect(queries[0].name).to.includes('myNewQuery')
+    expect(queries[1].name).to.includes('getMe')
+    expect(queries[queries.length - 1].name).to.includes('getUserByUsername')
+  })
+
   it('Should support union', () => {
     const args = {
       search: {
