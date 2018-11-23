@@ -18,5 +18,6 @@ type Test {
 
 type Query {
   getFamilyInfo: FamilyInfo!
+  searchUser(name: String!): User!
   getFamilyInfoByIsLocal(isLocal: Boolean!, test: [String]!, age: Int!, name: String!): FamilyInfo!
 }
