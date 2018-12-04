@@ -70,6 +70,24 @@ describe('Query generator', () => {
     expect(queries[queries.length - 1].name).to.includes('where: {')
   })
 
+  it('Should initialize constructor with selectedQueries queries', () => {
+    const args = {
+      getUserByUsername: {
+        username: 'Test',
+        id: 1
+      }
+    }
+    const loadTest = new EasyGraphQLTester(schema, args)
+
+    const queries = loadTest.createQuery(null, ['getUserByUsername'])
+
+    expect(queries).to.exist
+    expect(queries).to.be.a('array')
+    expect(queries[0].name).to.includes('getUserByUsername')
+    expect(queries[1].name).to.includes('getUserByUsername')
+    expect(queries[queries.length - 1].name).to.includes('getUserByUsername')
+  })
+
   it('Should support union', () => {
     const args = {
       search: {
@@ -119,5 +137,49 @@ describe('Query generator', () => {
 
     expect(error).to.exist
     expect(error.message).to.be.eq('All query arguments must be defined')
+  })
+
+  it('Should throw an error if the name is missing k6', () => {
+    let error
+    try {
+      const args = {
+        getUserByUsername: {
+          username: 'Test',
+          id: 1
+        },
+        getUser: {
+          where: {
+            id: '1',
+            name: 'demo'
+          }
+        }
+      }
+
+      const loadTest = new EasyGraphQLTester(schema, args)
+      loadTest.k6(null)
+    } catch (err) {
+      error = err
+    }
+
+    expect(error).to.exist
+    expect(error.message).to.be.eq('The k6 file name is missing')
+  })
+
+  it('Should run k6', () => {
+    const args = {
+      getUserByUsername: {
+        username: 'Test',
+        id: 1
+      },
+      getUser: {
+        where: {
+          id: '1',
+          name: 'demo'
+        }
+      }
+    }
+
+    const loadTest = new EasyGraphQLTester(schema, args)
+    loadTest.k6('test.js')
   })
 })

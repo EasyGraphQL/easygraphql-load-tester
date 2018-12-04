@@ -1,0 +1,28 @@
+{
+  "name": "easygraphql-load-tester-k6",
+  "version": "1.0.0",
+  "description": "easygraphql-load-tester example using k6",
+  "main": "index.js",
+  "scripts": {
+    "now": "easygraphql-now schema.gql --local -p=5000 --graphiql",
+    "easygraphql-load-tester": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "homepage": "https://github.com/EasyGraphQL/easygraphql-load-tester",
+  "author": {
+    "name": "EasyGraphQL",
+    "url": "https://github.com/EasyGraphQL"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EasyGraphQL/easygraphql-load-tester"
+  },
+  "bugs": {
+    "url": "https://github.com/EasyGraphQL/easygraphql-load-tester"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "easygraphql-now": "0.0.6"
+  }
+}

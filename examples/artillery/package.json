@@ -1,0 +1,29 @@
+{
+  "name": "easygraphql-load-tester-artillery",
+  "version": "1.0.0",
+  "description": "easygraphql-load-tester example using Artillery.io",
+  "main": "index.js",
+  "scripts": {
+    "now": "easygraphql-now schema.gql --local -p=5000 --graphiql",
+    "easygraphql-load-tester": "artillery run artillery.yml",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "homepage": "https://github.com/EasyGraphQL/easygraphql-load-tester",
+  "author": {
+    "name": "EasyGraphQL",
+    "url": "https://github.com/EasyGraphQL"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EasyGraphQL/easygraphql-load-tester"
+  },
+  "bugs": {
+    "url": "https://github.com/EasyGraphQL/easygraphql-load-tester"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "artillery": "^1.6.0-26",
+    "easygraphql-now": "0.0.6"
+  }
+}
