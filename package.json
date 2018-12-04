@@ -8,6 +8,11 @@
     "standard": "standard",
     "standard-fix": "standard --fix"
   },
+  "standard": {
+    "ignore": [
+      "examples"
+    ]
+  },
   "husky": {
     "hooks": {
       "pre-commit": "npm run standard",

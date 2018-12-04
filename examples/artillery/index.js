@@ -2,9 +2,9 @@
 
 const fs = require('fs')
 const path = require('path')
-const EasyGraphQLLoadTester = require('../lib')
+const EasyGraphQLLoadTester = require('../../lib')
 
-const familySchema = fs.readFileSync(path.join(__dirname, 'family.gql'), 'utf8')
+const familySchema = fs.readFileSync(path.join(__dirname, 'schema.gql'), 'utf8')
 
 const args = {
   getFamilyInfoByIsLocal: {
@@ -18,7 +18,7 @@ const args = {
   }
 }
 
-const automaticEGQL = new EasyGraphQLLoadTester(familySchema, args)
+const easyGraphQLLoadTester = new EasyGraphQLLoadTester(familySchema, args)
 
 const queries = [
   {
@@ -33,7 +33,10 @@ const queries = [
   }
 ]
 
-const testCases = automaticEGQL.artillery(queries)
+const testCases = easyGraphQLLoadTester.artillery({
+  customQueries: queries,
+  queryFile: true
+})
 
 module.exports = {
   testCases

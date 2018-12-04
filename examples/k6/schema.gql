@@ -1,0 +1,23 @@
+type FamilyInfo {
+  father: User!
+  mother: String!
+  brothers: [String]!
+  isLocal: Boolean!
+}
+
+type User {
+  name: String!
+  email: String!
+  test: Test!
+}
+
+type Test {
+  name: String!
+  email: String!
+}
+
+type Query {
+  getFamilyInfo: FamilyInfo!
+  searchUser(name: String!): User!
+  getFamilyInfoByIsLocal(isLocal: Boolean!, test: [String]!, age: Int!, name: String!): FamilyInfo!
+}
