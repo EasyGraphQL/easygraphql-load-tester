@@ -68,7 +68,7 @@ const loadTester = new EasyGraphQLLoadTester([userSchema, familySchema])
 'use strict'
 
 const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql')
-const EasyGraphQLTester = require('easygraphql-tester')
+const EasyGraphQLTester = require('easygraphql-load-tester')
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
