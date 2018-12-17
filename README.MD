@@ -63,6 +63,30 @@ const familySchema = fs.readFileSync(path.join(__dirname, 'schema', 'family.gql'
 const loadTester = new EasyGraphQLLoadTester([userSchema, familySchema])
 ```
 
+### Using GraphQL.js
+```js
+'use strict'
+
+const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql')
+const EasyGraphQLTester = require('easygraphql-tester')
+
+const schema = new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'RootQueryType',
+    fields: {
+      hello: {
+        type: GraphQLString,
+        resolve() {
+          return 'world';
+        }
+      }
+    }
+  })
+});
+
+const loadTester = new EasyGraphQLLoadTester(schema)
+```
+
 ## Artillery
 
 To use with [artillery](https://artillery.io), you must have it installed in your project, 
