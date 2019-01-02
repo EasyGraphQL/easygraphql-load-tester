@@ -1,3 +1,8 @@
+enum Roles {
+  ADMIN
+  USER
+}
+
 type Family {
   name: String!
   ages: [Int]!
@@ -14,6 +19,7 @@ type Me {
   apiKey: String!
   users: [User]!
   verified: Boolean!
+  role: Roles!
 }
 
 type User {
@@ -29,8 +35,18 @@ input UserInfoInput {
   name: String!
 }
 
+type UserInput {
+  name: String!
+  email: String!
+}
+
 type Query {
   getMe: Me
   getUserByUsername(username: String!, id: Int!): User
+  isAdmin(username: String!): Boolean!
   getUser(where: UserInfoInput!): User
+}
+
+type Mutation {
+  createUser(input: UserInput!): User!
 }
