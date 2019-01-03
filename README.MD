@@ -6,10 +6,10 @@
   <br>
 </h1>
 
+[![Coverage Status](https://coveralls.io/repos/github/EasyGraphQL/easygraphql-load-tester/badge.svg?branch=master)](https://coveralls.io/github/EasyGraphQL/easygraphql-load-tester?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/EasyGraphQL/easygraphql-load-tester.svg)](https://greenkeeper.io/)
+
 easygraphql-load-tester is a node library created to make load 
 testing on GraphQL based on the schema; it'll create a bunch of queries, that are going to be the ones used to test your server.
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/EasyGraphQL/easygraphql-load-tester.svg)](https://greenkeeper.io/)
 
 ## Installation
 
