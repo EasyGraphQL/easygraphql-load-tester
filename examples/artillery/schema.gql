@@ -16,8 +16,19 @@ type Test {
   email: String!
 }
 
+input CityInput {
+  name: String!
+  country: String!
+}
+
 type Query {
   getFamilyInfo: FamilyInfo!
   searchUser(name: String!): User!
   getFamilyInfoByIsLocal(isLocal: Boolean!, test: [String]!, age: Int!, name: String!): FamilyInfo!
+  getMe: Boolean!
+}
+
+type Mutation {
+  createUser(name: String!): User!
+  createCity(input: CityInput!): User!
 }

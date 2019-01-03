@@ -15,6 +15,15 @@ const args = {
   },
   searchUser: {
     name: 'demo'
+  },
+  createUser: {
+    name: 'demo'
+  },
+  createCity: {
+    input: {
+      name: 'demo',
+      country: 'Demo'
+    }
   }
 }
 
@@ -35,7 +44,7 @@ const queries = [
 
 const testCases = easyGraphQLLoadTester.artillery({
   customQueries: queries,
-  queryFile: true
+  withMutations: true
 })
 
 module.exports = {

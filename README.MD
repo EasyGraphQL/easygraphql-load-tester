@@ -162,6 +162,12 @@ You can select, if you want to save a `json` file with all the queries that wher
 to do it, on the options pass `queryFile: true`, if you don't pass anything it is not going
 to be saved.
 
+#### Mutations
+You can use [`easygraphql-load-tester`](https://github.com/EasyGraphQL/easygraphql-load-tester) to test
+your mutations as well; to do it, on the options pass `withMutations: true`, if you don't pass anything it is only
+going to test the queries.
+*If you set `withMutations: true`, don't forget to add the input values on the args*
+
 #### Options
 *This is optional, you can leave the first argument empty, if you don't want to pass any options*
 The artillery method will receive some options that will help to create custom queries,
@@ -171,7 +177,8 @@ and test specific queries.
 const options = {
   selectedQueries,
   customQueries: queries,
-  queryFile: true
+  queryFile: true,
+  withMutations: true
 }
 ```
 
@@ -198,7 +205,8 @@ const queries = [
 
 const options = {
   selectedQueries: ['getFamilyInfo', 'searchUser'],
-  customQueries: queries
+  customQueries: queries,
+  withMutations: true
 }
 
 const testCases = easyGraphQLLoadTester.artillery(options)
@@ -336,6 +344,12 @@ You can select, if you want to save a `json` file with all the queries that wher
 to do it, on the options pass `queryFile: true`, if you don't pass anything it is not going
 to be saved.
 
+#### Mutations
+You can use [`easygraphql-load-tester`](https://github.com/EasyGraphQL/easygraphql-load-tester) to test
+your mutations as well; to do it, on the options pass `withMutations: true`, if you don't pass anything it is only
+going to test the queries.
+*If you set `withMutations: true`, don't forget to add the input values on the args*
+
 #### Virtual users
 You can select how many virtual users do you want for your tests, just pass to the options
 `vus: <NUMBER_OF_VUS>`.
@@ -351,6 +365,7 @@ const options = {
   selectedQueries,
   customQueries: queries,
   queryFile: true,
+  withMutations: true,
   vus: 10,
   duration: '10s'
 }
@@ -379,6 +394,7 @@ const queries = [
 const options = {
   selectedQueries: ['getFamilyInfo', 'searchUser'],
   queryFile: true,
+  withMutations: true,
   vus: 10,
   duration: '10s'
 }

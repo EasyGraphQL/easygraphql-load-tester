@@ -2,7 +2,6 @@
 'use strict'
 
 const isObject = require('lodash.isobject')
-const constants = require('./constants')
 
 function getField (field, schema, maxDeepLevel = 5, deepLevel = 0) {
   deepLevel++
@@ -27,7 +26,12 @@ function getField (field, schema, maxDeepLevel = 5, deepLevel = 0) {
     }
   })
 
-  return `${field.name} { ${fields.join(' ')} }`
+  let selectedFields = ''
+  if (fields.length > 0) {
+    selectedFields = `{ ${fields.join(' ')} }`
+  }
+
+  return `${field.name} ${selectedFields}`
 }
 
 function createQueryArguments (args, userArgs) {
@@ -48,7 +52,7 @@ function createQueryArguments (args, userArgs) {
           nestedArgs.push(`${key}: "${selectedArg[key]}"`)
         }
         userArg = `{${nestedArgs.join(', ')}}`
-      } else if (typeof selectedArg !== constants.boolean && typeof selectedArg !== constants.number) {
+      } else if (typeof selectedArg !== 'boolean' && typeof selectedArg !== 'number') {
         userArg = `"${userArgs[arg.name]}"`
       } else {
         userArg = selectedArg
@@ -82,20 +86,36 @@ function createUnionQuery (nestedType, schema, queryName) {
   return unionQuery
 }
 
-function createQueryToTest (fields, queryHeader) {
-  const queryFields = fields.join(' ')
+function createQueryToTest (fields, queryHeader, isMutation) {
+  let selectedFields = ''
 
-  const newQuery = `
-    {
-      ${queryHeader} {
-        ${queryFields}
+  if (fields.length > 0) {
+    const queryFields = fields.join(' ')
+    selectedFields = `{
+      ${queryFields}
+    }`
+  }
+
+  let newQuery
+
+  if (!isMutation) {
+    newQuery = `
+      {
+        ${queryHeader} ${selectedFields}
       }
-    }
-  `
+    `
+  } else {
+    newQuery = `
+    mutation {
+        ${queryHeader} ${selectedFields}
+      }
+    `
+  }
 
   const queryToTest = {
     name: queryHeader,
-    query: newQuery
+    query: newQuery,
+    operation: isMutation ? 'Mutation' : 'Query'
   }
 
   return queryToTest

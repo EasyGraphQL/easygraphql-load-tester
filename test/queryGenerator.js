@@ -22,6 +22,9 @@ describe('Query generator', () => {
           id: '1',
           name: 'demo'
         }
+      },
+      isAdmin: {
+        username: 'test'
       }
     }
     const loadTest = new EasyGraphQLTester(schema, args)
@@ -46,6 +49,15 @@ describe('Query generator', () => {
           id: '1',
           name: 'demo'
         }
+      },
+      isAdmin: {
+        username: 'test'
+      },
+      createUser: {
+        input: {
+          name: 'test',
+          email: 'test@test.com'
+        }
       }
     }
     const loadTest = new EasyGraphQLTester(schema, args)
@@ -60,14 +72,13 @@ describe('Query generator', () => {
         }`
       }
     ]
-    const queries = loadTest.createQuery(myQueries)
+    const queries = loadTest.createQuery(myQueries, null, true)
 
     expect(queries).to.exist
     expect(queries).to.be.a('array')
     expect(queries[0].name).to.includes('myNewQuery')
     expect(queries[1].name).to.includes('getMe')
-    expect(queries[queries.length - 1].name).to.includes('getUser')
-    expect(queries[queries.length - 1].name).to.includes('where: {')
+    expect(queries[queries.length - 1].name).to.includes('createUser')
   })
 
   it('Should initialize constructor with selectedQueries queries', () => {
@@ -75,6 +86,9 @@ describe('Query generator', () => {
       getUserByUsername: {
         username: 'Test',
         id: 1
+      },
+      isAdmin: {
+        username: 'test'
       }
     }
     const loadTest = new EasyGraphQLTester(schema, args)
@@ -176,6 +190,9 @@ describe('Query generator', () => {
           id: '1',
           name: 'demo'
         }
+      },
+      isAdmin: {
+        username: 'test'
       }
     }
 
