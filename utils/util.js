@@ -38,7 +38,7 @@ function createQueryArguments (args, userArgs) {
   try {
     const queryArgs = []
     args.forEach(arg => {
-      if (!userArgs[arg.name]) {
+      if (!userArgs[arg.name] && userArgs[arg.name] !== 0) {
         throw new Error()
       }
 
