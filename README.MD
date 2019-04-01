@@ -162,6 +162,10 @@ You can select, if you want to save a `json` file with all the queries that wher
 to do it, on the options pass `queryFile: true`, if you don't pass anything it is not going
 to be saved.
 
+### Query file path
+You can select the path that you want to use to save the query file, if it's not set
+it'll use by default `path.resolve()`
+
 #### Mutations
 You can use [`easygraphql-load-tester`](https://github.com/EasyGraphQL/easygraphql-load-tester) to test
 your mutations as well; to do it, on the options pass `withMutations: true`, if you don't pass anything it is only
