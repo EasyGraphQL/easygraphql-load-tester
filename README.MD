@@ -375,7 +375,7 @@ const options = {
 }
 ```
 
-and then pass it as the second argument to `loadTester.artillery(<FILE_NAME>, options)`.
+and then pass it as the second argument to `loadTester.k6(<FILE_NAME>, options)`.
 **Note**: Write the query with the arguments, also, don't forget to write them on
 the query arguments object so the other queries can access them.
 
@@ -407,7 +407,7 @@ easyGraphQLLoadTester.k6('k6.js', options)
 ```
 
 ### k6.js
-The artillery file should have this minimum configuration, you can add yours in case it is needed:
+The k6 file should have this minimum configuration, you can add yours in case it is needed:
 
 **Note: dont' change the name and the route of the queries `./easygraphql-load-tester-queries.json`**
 
