@@ -35,40 +35,39 @@ function getField (field, schema, maxDeepLevel = 5, deepLevel = 0) {
 }
 
 function createQueryArguments (args, userArgs) {
-  try {
-    const queryArgs = []
-    args.forEach(arg => {
-      if (!userArgs[arg.name] && userArgs[arg.name] !== 0) {
-        throw new Error()
+  const queryArgs = []
+  args.forEach(arg => {
+    if (!userArgs) {
+      throw new Error(`No query arguments defined`)
+    }
+    if (!userArgs[arg.name] && userArgs[arg.name] !== 0) {
+      throw new Error(`All query arguments must be defined - missing ${arg.name}`)
+    }
+
+    const selectedArg = userArgs[arg.name]
+
+    let userArg
+
+    if (isObject(selectedArg)) {
+      const nestedArgs = []
+      for (const key of Object.keys(selectedArg)) {
+        nestedArgs.push(`${key}: "${selectedArg[key]}"`)
       }
+      userArg = `{${nestedArgs.join(', ')}}`
+    } else if (typeof selectedArg !== 'boolean' && typeof selectedArg !== 'number') {
+      userArg = `"${userArgs[arg.name]}"`
+    } else {
+      userArg = selectedArg
+    }
 
-      const selectedArg = userArgs[arg.name]
+    queryArgs.push(`${arg.name}: ${userArg}`)
+  })
 
-      let userArg
+  let test = queryArgs.join(', ')
+  test = test.replace(/"\[/g, '[')
+  test = test.replace(/\]"/g, ']')
 
-      if (isObject(selectedArg)) {
-        const nestedArgs = []
-        for (const key of Object.keys(selectedArg)) {
-          nestedArgs.push(`${key}: "${selectedArg[key]}"`)
-        }
-        userArg = `{${nestedArgs.join(', ')}}`
-      } else if (typeof selectedArg !== 'boolean' && typeof selectedArg !== 'number') {
-        userArg = `"${userArgs[arg.name]}"`
-      } else {
-        userArg = selectedArg
-      }
-
-      queryArgs.push(`${arg.name}: ${userArg}`)
-    })
-
-    let test = queryArgs.join(', ')
-    test = test.replace(/"\[/g, '[')
-    test = test.replace(/\]"/g, ']')
-
-    return test
-  } catch (err) {
-    throw new Error('All query arguments must be defined')
-  }
+  return test
 }
 
 function createUnionQuery (nestedType, schema, queryName) {
