@@ -10,7 +10,12 @@ function create (schema, query, selectedQueries, args, isMutation) {
 
   let queryHeader
   if (query.arguments.length) {
-    const createdArgs = createQueryArguments(query.arguments, args[query.name])
+    let createdArgs
+    try {
+      createdArgs = createQueryArguments(query.arguments, args[query.name])
+    } catch (err) {
+      throw new Error(`Failed to create query arguments for ${query.name}\n${err}`)
+    }
     queryHeader = `${query.name}(${createdArgs})`
   } else {
     queryHeader = query.name

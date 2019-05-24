@@ -135,7 +135,7 @@ describe('Query generator', () => {
     }
 
     expect(error).to.exist
-    expect(error.message).to.be.eq('All query arguments must be defined')
+    expect(error.message).to.be.eq('Failed to create query arguments for getUserByUsername\nError: All query arguments must be defined - missing id')
   })
 
   it('Should throw an error if a arg is not defined', () => {
@@ -150,7 +150,7 @@ describe('Query generator', () => {
     }
 
     expect(error).to.exist
-    expect(error.message).to.be.eq('All query arguments must be defined')
+    expect(error.message).to.be.eq('Failed to create query arguments for search\nError: No query arguments defined')
   })
 
   it('Should throw an error if the name is missing k6', () => {

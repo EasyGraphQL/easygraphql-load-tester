@@ -19,7 +19,7 @@ describe('Constructor', () => {
     }
 
     expect(error).to.be.an.instanceOf(Error)
-    expect(error.message).to.be.eq('The schema is require')
+    expect(error.message).to.be.eq('The schema is required')
   })
 
   it('Should fail if the schema is null', () => {
@@ -31,7 +31,7 @@ describe('Constructor', () => {
     }
 
     expect(error).to.be.an.instanceOf(Error)
-    expect(error.message).to.be.eq('The schema is require')
+    expect(error.message).to.be.eq('The schema is required')
   })
 
   it('Should initialize constructor', () => {
