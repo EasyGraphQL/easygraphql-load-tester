@@ -40,7 +40,7 @@ function createQueryArguments (args, userArgs) {
     if (!userArgs) {
       throw new Error(`No query arguments defined`)
     }
-    if (!userArgs[arg.name] && userArgs[arg.name] !== 0) {
+    if (typeof userArgs[arg.name] === 'undefined') {
       throw new Error(`All query arguments must be defined - missing ${arg.name}`)
     }
 
