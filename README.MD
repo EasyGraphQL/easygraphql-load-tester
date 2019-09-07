@@ -371,7 +371,10 @@ const options = {
   queryFile: true,
   withMutations: true,
   vus: 10,
-  duration: '10s'
+  duration: '10s',
+  out: [
+    "json=results.json"
+  ]
 }
 ```
 
@@ -400,7 +403,10 @@ const options = {
   queryFile: true,
   withMutations: true,
   vus: 10,
-  duration: '10s'
+  duration: '10s',
+  out: [
+    "json=results.json"
+  ]
 }
 
 easyGraphQLLoadTester.k6('k6.js', options)
