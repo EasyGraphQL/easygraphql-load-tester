@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc --check-coverage --lines 90 mocha",
-    "prettier": "prettier --write './{lib,test,utils}/**/*.{js,graphql}'",
+    "prettier:check": "prettier --write './{lib,test,utils}/**/*.{js,graphql}'",
+    "prettier:format": "prettier --write './{lib,test,utils}/**/*.{js,graphql}'",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
   },
   "standard": {
@@ -15,7 +16,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run prettier && git add .",
+      "pre-commit": "npm run prettier:format && git add .",
       "pre-push": "npm run test"
     }
   },
