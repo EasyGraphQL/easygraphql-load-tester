@@ -34,7 +34,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "easygraphql-parser": "^0.0.9",
+    "easygraphql-parser": "^0.0.13",
     "lodash.isobject": "^3.0.2"
   },
   "devDependencies": {
