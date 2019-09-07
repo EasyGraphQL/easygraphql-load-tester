@@ -38,10 +38,12 @@ function createQueryArguments (args, userArgs) {
   const queryArgs = []
   args.forEach(arg => {
     if (!userArgs) {
-      throw new Error(`No query arguments defined`)
+      throw new Error('No query arguments defined')
     }
     if (typeof userArgs[arg.name] === 'undefined') {
-      throw new Error(`All query arguments must be defined - missing ${arg.name}`)
+      throw new Error(
+        `All query arguments must be defined - missing ${arg.name}`
+      )
     }
 
     const selectedArg = userArgs[arg.name]
@@ -54,7 +56,10 @@ function createQueryArguments (args, userArgs) {
         nestedArgs.push(`${key}: "${selectedArg[key]}"`)
       }
       userArg = `{${nestedArgs.join(', ')}}`
-    } else if (typeof selectedArg !== 'boolean' && typeof selectedArg !== 'number') {
+    } else if (
+      typeof selectedArg !== 'boolean' &&
+      typeof selectedArg !== 'number'
+    ) {
       userArg = `"${userArgs[arg.name]}"`
     } else {
       userArg = selectedArg
@@ -120,4 +125,9 @@ function createQueryToTest (fields, queryHeader, isMutation) {
   return queryToTest
 }
 
-module.exports = { getField, createQueryArguments, createUnionQuery, createQueryToTest }
+module.exports = {
+  getField,
+  createQueryArguments,
+  createUnionQuery,
+  createQueryToTest
+}
