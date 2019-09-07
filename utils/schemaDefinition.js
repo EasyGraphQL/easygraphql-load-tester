@@ -6,7 +6,7 @@
  * @param schema - The GraphQL schema to read field names from.
  * @returns {string}
  */
-function queryField (schema) {
+function queryField(schema) {
   return schema.schemaDefinition ? schema.schemaDefinition.query.field : 'Query'
 }
 
@@ -16,8 +16,10 @@ function queryField (schema) {
  * @param schema - The GraphQL schema to read field names from.
  * @returns {string}
  */
-function mutationField (schema) {
-  return schema.schemaDefinition ? schema.schemaDefinition.mutation.field : 'Mutation'
+function mutationField(schema) {
+  return schema.schemaDefinition
+    ? schema.schemaDefinition.mutation.field
+    : 'Mutation'
 }
 
 module.exports = { queryField, mutationField }

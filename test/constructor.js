@@ -7,7 +7,10 @@ const path = require('path')
 const { expect } = require('chai')
 const EasyGraphQLTester = require('../lib')
 
-const schema = fs.readFileSync(path.join(__dirname, 'schema', 'schema.gql'), 'utf8')
+const schema = fs.readFileSync(
+  path.join(__dirname, 'schema', 'schema.gql'),
+  'utf8'
+)
 
 describe('Constructor', () => {
   it('Should fail if the schema is missing', () => {

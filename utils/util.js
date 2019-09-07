@@ -3,7 +3,7 @@
 
 const isObject = require('lodash.isobject')
 
-function getField (field, schema, maxDeepLevel = 5, deepLevel = 0) {
+function getField(field, schema, maxDeepLevel = 5, deepLevel = 0) {
   deepLevel++
   if (deepLevel > maxDeepLevel) return
 
@@ -18,7 +18,7 @@ function getField (field, schema, maxDeepLevel = 5, deepLevel = 0) {
   }
 
   const fields = []
-  nestedType.fields.forEach(field => {
+  nestedType.fields.forEach((field) => {
     if (schema[field.type]) {
       fields.push(getField(field, schema, maxDeepLevel, deepLevel))
     } else {
@@ -34,14 +34,16 @@ function getField (field, schema, maxDeepLevel = 5, deepLevel = 0) {
   return `${field.name} ${selectedFields}`
 }
 
-function createQueryArguments (args, userArgs) {
+function createQueryArguments(args, userArgs) {
   const queryArgs = []
-  args.forEach(arg => {
+  args.forEach((arg) => {
     if (!userArgs) {
-      throw new Error(`No query arguments defined`)
+      throw new Error('No query arguments defined')
     }
     if (typeof userArgs[arg.name] === 'undefined') {
-      throw new Error(`All query arguments must be defined - missing ${arg.name}`)
+      throw new Error(
+        `All query arguments must be defined - missing ${arg.name}`
+      )
     }
 
     const selectedArg = userArgs[arg.name]
@@ -54,7 +56,10 @@ function createQueryArguments (args, userArgs) {
         nestedArgs.push(`${key}: "${selectedArg[key]}"`)
       }
       userArg = `{${nestedArgs.join(', ')}}`
-    } else if (typeof selectedArg !== 'boolean' && typeof selectedArg !== 'number') {
+    } else if (
+      typeof selectedArg !== 'boolean' &&
+      typeof selectedArg !== 'number'
+    ) {
       userArg = `"${userArgs[arg.name]}"`
     } else {
       userArg = selectedArg
@@ -70,9 +75,9 @@ function createQueryArguments (args, userArgs) {
   return test
 }
 
-function createUnionQuery (nestedType, schema, queryName) {
+function createUnionQuery(nestedType, schema, queryName) {
   const fields = []
-  nestedType.fields.forEach(field => {
+  nestedType.fields.forEach((field) => {
     const createdField = getField(field, schema, 2)
     fields.push(createdField)
   })
@@ -85,7 +90,7 @@ function createUnionQuery (nestedType, schema, queryName) {
   return unionQuery
 }
 
-function createQueryToTest (fields, queryHeader, isMutation) {
+function createQueryToTest(fields, queryHeader, isMutation) {
   let selectedFields = ''
 
   if (fields.length > 0) {
@@ -114,10 +119,15 @@ function createQueryToTest (fields, queryHeader, isMutation) {
   const queryToTest = {
     name: queryHeader,
     query: newQuery,
-    operation: isMutation ? 'Mutation' : 'Query'
+    operation: isMutation ? 'Mutation' : 'Query',
   }
 
   return queryToTest
 }
 
-module.exports = { getField, createQueryArguments, createUnionQuery, createQueryToTest }
+module.exports = {
+  getField,
+  createQueryArguments,
+  createUnionQuery,
+  createQueryToTest,
+}
