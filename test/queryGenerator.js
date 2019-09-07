@@ -7,25 +7,31 @@ const path = require('path')
 const { expect } = require('chai')
 const EasyGraphQLTester = require('../lib')
 
-const schema = fs.readFileSync(path.join(__dirname, 'schema', 'schema.gql'), 'utf8')
-const search = fs.readFileSync(path.join(__dirname, 'schema', 'search.gql'), 'utf8')
+const schema = fs.readFileSync(
+  path.join(__dirname, 'schema', 'schema.gql'),
+  'utf8'
+)
+const search = fs.readFileSync(
+  path.join(__dirname, 'schema', 'search.gql'),
+  'utf8'
+)
 
 describe('Query generator', () => {
   it('Should initialize constructor', () => {
     const args = {
       getUserByUsername: {
         username: 'Test',
-        id: 1
+        id: 1,
       },
       getUser: {
         where: {
           id: '1',
-          name: 'demo'
-        }
+          name: 'demo',
+        },
       },
       isAdmin: {
-        username: 'test'
-      }
+        username: 'test',
+      },
     }
     const loadTest = new EasyGraphQLTester(schema, args)
 
@@ -42,23 +48,23 @@ describe('Query generator', () => {
     const args = {
       getUserByUsername: {
         username: 'Test',
-        id: 1
+        id: 1,
       },
       getUser: {
         where: {
           id: '1',
-          name: 'demo'
-        }
+          name: 'demo',
+        },
       },
       isAdmin: {
-        username: 'test'
+        username: 'test',
       },
       createUser: {
         input: {
           name: 'test',
-          email: 'test@test.com'
-        }
-      }
+          email: 'test@test.com',
+        },
+      },
     }
     const loadTest = new EasyGraphQLTester(schema, args)
 
@@ -69,8 +75,8 @@ describe('Query generator', () => {
           myNewQuery {
             test
           }
-        }`
-      }
+        }`,
+      },
     ]
     const queries = loadTest.createQuery(myQueries, null, true)
 
@@ -85,11 +91,11 @@ describe('Query generator', () => {
     const args = {
       getUserByUsername: {
         username: 'Test',
-        id: 1
+        id: 1,
       },
       isAdmin: {
-        username: 'test'
-      }
+        username: 'test',
+      },
     }
     const loadTest = new EasyGraphQLTester(schema, args)
 
@@ -105,8 +111,8 @@ describe('Query generator', () => {
   it('Should support union', () => {
     const args = {
       search: {
-        name: 'Test'
-      }
+        name: 'Test',
+      },
     }
     const loadTest = new EasyGraphQLTester(search, args)
 
@@ -124,8 +130,8 @@ describe('Query generator', () => {
     try {
       const args = {
         getUserByUsername: {
-          username: 'Test'
-        }
+          username: 'Test',
+        },
       }
 
       const loadTest = new EasyGraphQLTester(schema, args)
@@ -135,7 +141,9 @@ describe('Query generator', () => {
     }
 
     expect(error).to.exist
-    expect(error.message).to.be.eq('Failed to create query arguments for getUserByUsername\nError: All query arguments must be defined - missing id')
+    expect(error.message).to.be.eq(
+      'Failed to create query arguments for getUserByUsername\nError: All query arguments must be defined - missing id'
+    )
   })
 
   it('Should throw an error if a arg is not defined', () => {
@@ -150,7 +158,9 @@ describe('Query generator', () => {
     }
 
     expect(error).to.exist
-    expect(error.message).to.be.eq('Failed to create query arguments for search\nError: No query arguments defined')
+    expect(error.message).to.be.eq(
+      'Failed to create query arguments for search\nError: No query arguments defined'
+    )
   })
 
   it('Should throw an error if the name is missing k6', () => {
@@ -159,14 +169,14 @@ describe('Query generator', () => {
       const args = {
         getUserByUsername: {
           username: 'Test',
-          id: 1
+          id: 1,
         },
         getUser: {
           where: {
             id: '1',
-            name: 'demo'
-          }
-        }
+            name: 'demo',
+          },
+        },
       }
 
       const loadTest = new EasyGraphQLTester(schema, args)
@@ -183,17 +193,17 @@ describe('Query generator', () => {
     const args = {
       getUserByUsername: {
         username: 'Test',
-        id: 1
+        id: 1,
       },
       getUser: {
         where: {
           id: '1',
-          name: 'demo'
-        }
+          name: 'demo',
+        },
       },
       isAdmin: {
-        username: 'test'
-      }
+        username: 'test',
+      },
     }
 
     const loadTest = new EasyGraphQLTester(schema, args)

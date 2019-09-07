@@ -1,8 +1,13 @@
 'use strict'
 
-const { getField, createQueryArguments, createUnionQuery, createQueryToTest } = require('./util')
+const {
+  getField,
+  createQueryArguments,
+  createUnionQuery,
+  createQueryToTest,
+} = require('./util')
 
-function create (schema, query, selectedQueries, args, isMutation) {
+function create(schema, query, selectedQueries, args, isMutation) {
   if (selectedQueries.length) {
     const isQueryToTest = selectedQueries.indexOf(query.name)
     if (isQueryToTest < 0) return
@@ -14,7 +19,9 @@ function create (schema, query, selectedQueries, args, isMutation) {
     try {
       createdArgs = createQueryArguments(query.arguments, args[query.name])
     } catch (err) {
-      throw new Error(`Failed to create query arguments for ${query.name}\n${err}`)
+      throw new Error(
+        `Failed to create query arguments for ${query.name}\n${err}`
+      )
     }
     queryHeader = `${query.name}(${createdArgs})`
   } else {
@@ -33,7 +40,7 @@ function create (schema, query, selectedQueries, args, isMutation) {
 
   if (nestedType.type === 'UnionTypeDefinition') {
     const unionQueries = []
-    nestedType.types.forEach(type => {
+    nestedType.types.forEach((type) => {
       const newNestedType = schema[type]
 
       unionQueries.push(createUnionQuery(newNestedType, schema, type))
@@ -43,7 +50,7 @@ function create (schema, query, selectedQueries, args, isMutation) {
 
     queriesToTest.push(queryToTest)
   } else {
-    nestedType.fields.forEach(field => {
+    nestedType.fields.forEach((field) => {
       const createdField = getField(field, schema)
       fields.push(createdField)
 
