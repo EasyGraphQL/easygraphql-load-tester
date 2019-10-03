@@ -142,7 +142,7 @@ describe('Query generator', () => {
 
     expect(error).to.exist
     expect(error.message).to.be.eq(
-      'Failed to create query arguments for getUserByUsername\nError: All query arguments must be defined - missing id'
+      'Failed to create query arguments for getUserByUsername\nError: All required query arguments must be defined - missing id'
     )
   })
 
