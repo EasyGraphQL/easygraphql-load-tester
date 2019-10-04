@@ -34,39 +34,45 @@ function getField(field, schema, maxDeepLevel = 5, deepLevel = 0) {
   return `${field.name} ${selectedFields}`
 }
 
-function createQueryArguments(args, userArgs) {
+function createQueryArguments(args, userArgs, queryName) {
   const queryArgs = []
-  args.forEach((arg) => {
-    if (!userArgs) {
-      throw new Error('No query arguments defined')
-    }
-    if (typeof userArgs[arg.name] === 'undefined' && arg.noNull) {
-      throw new Error(
-        `All required query arguments must be defined - missing ${arg.name}`
-      )
-    }
-
-    const selectedArg = userArgs[arg.name]
-
-    let userArg
-
-    if (isObject(selectedArg)) {
-      const nestedArgs = []
-      for (const key of Object.keys(selectedArg)) {
-        nestedArgs.push(`${key}: "${selectedArg[key]}"`)
+  args
+    .filter((arg) => arg.noNull)
+    .forEach((arg) => {
+      if (!userArgs) {
+        throw new Error(`Error in ${queryName} - No query arguments defined`)
       }
-      userArg = `{${nestedArgs.join(', ')}}`
-    } else if (
-      typeof selectedArg !== 'boolean' &&
-      typeof selectedArg !== 'number'
-    ) {
-      userArg = `"${userArgs[arg.name]}"`
-    } else {
-      userArg = selectedArg
-    }
+      if (typeof userArgs[arg.name] === 'undefined' && arg.noNull) {
+        throw new Error(
+          `Error in ${queryName} - All required query arguments must be defined - missing ${arg.name}`
+        )
+      }
 
-    queryArgs.push(`${arg.name}: ${userArg}`)
-  })
+      const selectedArg = userArgs[arg.name]
+
+      let userArg
+
+      if (isObject(selectedArg)) {
+        const nestedArgs = []
+        for (const key of Object.keys(selectedArg)) {
+          const arg =
+            typeof selectedArg !== 'boolean' && typeof selectedArg !== 'number'
+              ? `"${selectedArg[key]}"`
+              : selectedArg[key]
+          nestedArgs.push(`${key}: ${arg}`)
+        }
+        userArg = `{${nestedArgs.join(', ')}}`
+      } else if (
+        typeof selectedArg !== 'boolean' &&
+        typeof selectedArg !== 'number'
+      ) {
+        userArg = `"${userArgs[arg.name]}"`
+      } else {
+        userArg = selectedArg
+      }
+
+      queryArgs.push(`${arg.name}: ${userArg}`)
+    })
 
   let test = queryArgs.join(', ')
   test = test.replace(/"\[/g, '[')
@@ -90,7 +96,7 @@ function createUnionQuery(nestedType, schema, queryName) {
   return unionQuery
 }
 
-function createQueryToTest(fields, queryHeader, isMutation) {
+function createQueryToTest(fields, queryHeader, isMutation, name) {
   let selectedFields = ''
 
   if (fields.length > 0) {
@@ -117,7 +123,7 @@ function createQueryToTest(fields, queryHeader, isMutation) {
   }
 
   const queryToTest = {
-    name: queryHeader,
+    name,
     query: newQuery,
     operation: isMutation ? 'Mutation' : 'Query',
   }

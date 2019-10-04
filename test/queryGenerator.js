@@ -84,6 +84,7 @@ describe('Query generator', () => {
     expect(queries).to.be.a('array')
     expect(queries[0].name).to.includes('myNewQuery')
     expect(queries[1].name).to.includes('getMe')
+    expect(queries[1].operation).to.be.eq('Query')
     expect(queries[queries.length - 1].name).to.includes('createUser')
   })
 
@@ -142,7 +143,7 @@ describe('Query generator', () => {
 
     expect(error).to.exist
     expect(error.message).to.be.eq(
-      'Failed to create query arguments for getUserByUsername\nError: All required query arguments must be defined - missing id'
+      'Error in getUserByUsername - All required query arguments must be defined - missing id'
     )
   })
 
@@ -159,7 +160,7 @@ describe('Query generator', () => {
 
     expect(error).to.exist
     expect(error.message).to.be.eq(
-      'Failed to create query arguments for search\nError: No query arguments defined'
+      'Error in search - No query arguments defined'
     )
   })
 
