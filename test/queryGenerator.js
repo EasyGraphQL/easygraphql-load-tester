@@ -35,7 +35,7 @@ describe('Query generator', () => {
     }
     const loadTest = new EasyGraphQLTester(schema, args)
 
-    const queries = loadTest.createQuery()
+    const queries = loadTest.createQueries()
 
     expect(queries).to.exist
     expect(queries).to.be.a('array')
@@ -78,7 +78,7 @@ describe('Query generator', () => {
         }`,
       },
     ]
-    const queries = loadTest.createQuery(myQueries, null, true)
+    const queries = loadTest.createQueries(myQueries, null, true)
 
     expect(queries).to.exist
     expect(queries).to.be.a('array')
@@ -100,7 +100,7 @@ describe('Query generator', () => {
     }
     const loadTest = new EasyGraphQLTester(schema, args)
 
-    const queries = loadTest.createQuery(null, ['getUserByUsername'])
+    const queries = loadTest.createQueries(null, ['getUserByUsername'])
 
     expect(queries).to.exist
     expect(queries).to.be.a('array')
@@ -117,7 +117,7 @@ describe('Query generator', () => {
     }
     const loadTest = new EasyGraphQLTester(search, args)
 
-    const queries = loadTest.createQuery()
+    const queries = loadTest.createQueries()
 
     expect(queries).to.exist
     expect(queries).to.be.a('array')
@@ -136,7 +136,7 @@ describe('Query generator', () => {
       }
 
       const loadTest = new EasyGraphQLTester(schema, args)
-      loadTest.createQuery()
+      loadTest.createQueries()
     } catch (err) {
       error = err
     }
@@ -153,7 +153,7 @@ describe('Query generator', () => {
       const args = {}
 
       const loadTest = new EasyGraphQLTester(search, args)
-      loadTest.createQuery()
+      loadTest.createQueries()
     } catch (err) {
       error = err
     }
