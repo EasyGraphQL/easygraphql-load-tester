@@ -8,7 +8,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/EasyGraphQL/easygraphql-load-tester/badge.svg?branch=master)](https://coveralls.io/github/EasyGraphQL/easygraphql-load-tester?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/EasyGraphQL/easygraphql-load-tester.svg)](https://greenkeeper.io/)
 
-easygraphql-load-tester is a node library created to make load 
+easygraphql-load-tester is a node library created to make load
 testing on GraphQL based on the schema; it'll create a bunch of queries, that are going to be the ones used to test your server.
 
 ## Installation
@@ -31,14 +31,14 @@ $ npm install easygraphql-load-tester --save
 + Read the schema.
 + Initialize the tester, and pass the schema as the first argument.
   + If there are multiples schemas pass an array with the schemas an argument.
-  + **Note**: In order to use multiples schema files, the queries and mutations must be extended.  + 
+  + **Note**: In order to use multiples schema files, the queries and mutations must be extended.  +
 + The second argument is the arguments on the queries, **only** if there are some of them.
   + **Note**: If an argument is an array it should be passed as an `string`, e.g: `'["name", "name 2"]'`
 
 
 ### One schema file
 ```js
-'use strict' 
+'use strict'
 
 const EasyGraphQLLoadTester = require('easygraphql-load-tester')
 const fs = require('fs')
@@ -51,7 +51,7 @@ const loadTester = new EasyGraphQLLoadTester(userSchema)
 
 ### Multiples schemas files
 ```js
-'use strict' 
+'use strict'
 
 const EasyGraphQLLoadTester = require('easygraphql-load-tester')
 const fs = require('fs')
@@ -89,7 +89,7 @@ const loadTester = new EasyGraphQLLoadTester(schema)
 
 ## Artillery
 
-To use with [artillery](https://artillery.io), you must have it installed in your project, 
+To use with [artillery](https://artillery.io), you must have it installed in your project,
 in case you don't have it just run:
 
 ```shell
@@ -100,7 +100,7 @@ $ npm install artillery --saved-dev
 You should configure your `index.js` file:
 
 ```js
-'use strict' 
+'use strict'
 
 const EasyGraphQLLoadTester = require('easygraphql-load-tester')
 const fs = require('fs')
@@ -226,18 +226,18 @@ config:
       - duration: 5
         arrivalRate: 1
     processor: "./index.js"
-  scenarios:
-    - name: "GraphQL Query load test"
-      flow:
-        - function: "testCases"
-        - loop:
-            - post:
-                url: "/"
-                json:
-                  query: "{{ $loopElement.query }}"
-            - log: "----------------------------------"
-            - log: "Sent a request to the Query: {{ $loopElement.name }}"
-          over: cases
+scenarios:
+  - name: "GraphQL Query load test"
+    flow:
+      - function: "testCases"
+      - loop:
+          - post:
+              url: "/"
+              json:
+                query: "{{ $loopElement.query }}"
+          - log: "----------------------------------"
+          - log: "Sent a request to the Query: {{ $loopElement.name }}"
+        over: cases
 ```
 *In this case the server is running on http://localhost:5000/*
 
@@ -281,14 +281,14 @@ The result is going to be something like this if you apply the basic configurati
 
 ## k6
 
-To use with [k6](https://docs.k6.io/docs/), you must have it installed on your computer, 
+To use with [k6](https://docs.k6.io/docs/), you must have it installed on your computer,
 in case you don't have it, visit the [installation guide](https://docs.k6.io/docs/installation)
 
 ### index.js
 You should configure your `index.js` file:
 
 ```js
-'use strict' 
+'use strict'
 
 const EasyGraphQLLoadTester = require('easygraphql-load-tester')
 const fs = require('fs')
@@ -456,13 +456,13 @@ can learn from your story.
 
 ## Importance of using dataloaders
 
-Some time ago I was working on a GraphQL project that includes activities and 
-each activity can have some comments with the info of the user that created the comment. 
+Some time ago I was working on a GraphQL project that includes activities and
+each activity can have some comments with the info of the user that created the comment.
 The first thing that you might think is that it is a problem of query n + 1 , and yes; it is!
 
-I decided to implement dataloaders but for some reason, there was an error on the 
-implementation, so it wasn't caching the query and the result was a lot of 
-request to the database. After finding that issue I implemented it on the right 
+I decided to implement dataloaders but for some reason, there was an error on the
+implementation, so it wasn't caching the query and the result was a lot of
+request to the database. After finding that issue I implemented it on the right
 way reducing the queries to the database from 46 to 6.
 
 ### Results without dataloaders
