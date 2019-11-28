@@ -213,7 +213,7 @@ describe('Query generator', () => {
 
   it('Should initialize constructor with only selectedQueries', () => {
     const customQuery = [
-      `query GetUserByUsername {
+      `{
         getUserByUsername(username: "test") {
           email
         }
@@ -232,14 +232,14 @@ describe('Query generator', () => {
 
     const queries = loadTest.createQueries(
       customQuery,
-      ['GetUserByUsername'],
+      ['getUserByUsername'],
       null,
       true
     )
 
     expect(queries).to.exist
     expect(queries).to.be.a('array')
-    expect(queries[0].name).to.includes('GetUserByUsername')
+    expect(queries[0].name).to.includes('getUserByUsername')
   })
 
   it('Should throw an error if custom queries is not an array', () => {
