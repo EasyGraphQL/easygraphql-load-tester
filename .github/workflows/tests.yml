@@ -17,5 +17,4 @@ jobs:
       - name: Run tests
         run: npm run test
       - name: Check coveralls
-        name: npm run coveralls
-    
+        run: npm run coveralls
