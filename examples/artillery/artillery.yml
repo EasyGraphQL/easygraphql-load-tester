@@ -16,5 +16,3 @@ scenarios:
           - log: "----------------------------------"
           - log: "Sent a request to the {{ $loopElement.operation }}: {{ $loopElement.name }}"
         over: cases
-
-    
