@@ -210,4 +210,71 @@ describe('Query generator', () => {
     const loadTest = new EasyGraphQLTester(schema, args)
     loadTest.k6('test.js')
   })
+
+  it('Should initialize constructor with only selectedQueries', () => {
+    const customQuery = [
+      `query GetUserByUsername {
+        getUserByUsername(username: "test") {
+          email
+        }
+      }`,
+    ]
+    const args = {
+      getUserByUsername: {
+        username: 'Test',
+        id: 1,
+      },
+      isAdmin: {
+        username: 'test',
+      },
+    }
+    const loadTest = new EasyGraphQLTester(schema, args)
+
+    const queries = loadTest.createQueries(
+      customQuery,
+      ['GetUserByUsername'],
+      null,
+      true
+    )
+
+    expect(queries).to.exist
+    expect(queries).to.be.a('array')
+    expect(queries[0].name).to.includes('GetUserByUsername')
+  })
+
+  it('Should throw an error if custom queries is not an array', () => {
+    let error
+    try {
+      const customQuery = `query GetUserByUsername {
+        getUserByUsername(username: "test") {
+          email
+        }
+      }`
+
+      const args = {
+        getUserByUsername: {
+          username: 'Test',
+          id: 1,
+        },
+        isAdmin: {
+          username: 'test',
+        },
+      }
+      const loadTest = new EasyGraphQLTester(schema, args)
+
+      const queries = loadTest.createQueries(
+        customQuery,
+        ['GetUserByUsername'],
+        null,
+        true
+      )
+    } catch (err) {
+      error = err
+    }
+
+    expect(error).to.exist
+    expect(error.message).to.be.eq(
+      'Custom queries and selected queries should be an array'
+    )
+  })
 })
