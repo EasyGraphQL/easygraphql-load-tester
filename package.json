@@ -2,11 +2,14 @@
   "name": "easygraphql-load-tester",
   "version": "0.3.7",
   "description": "Create GrapgQL queries to use with test loaders.",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "test": "nyc --check-coverage --lines 90 mocha",
-    "prettier:check": "prettier --write './{lib,test,utils}/**/*.{js,graphql}'",
-    "prettier:format": "prettier --write './{lib,test,utils}/**/*.{js,graphql}'",
+    "build": "tsc",
+    "test": "nyc --check-coverage --lines 90 mocha -r ts-node/register 'test/**/*.spec.{ts,js}' --exit",
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx,graphql}'",
+    "prettier:check": "prettier --write './{src,test}/**/*.{ts,js,graphql}'",
+    "prettier:format": "prettier --write './{src,test}/**/*.{ts,js,graphql}'",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
   },
   "husky": {
@@ -30,18 +33,44 @@
   "license": "MIT",
   "dependencies": {
     "easygraphql-parser": "^0.0.13",
+    "graphql": "^14.5.8",
     "lodash.flatten": "^4.4.0",
     "lodash.isobject": "^3.0.2"
   },
   "devDependencies": {
+    "@types/lodash.flatten": "^4.4.6",
+    "@types/lodash.isobject": "^3.0.6",
+    "@types/node": "^12.12.14",
+    "@typescript-eslint/eslint-plugin": "^2.9.0",
+    "@typescript-eslint/parser": "^2.9.0",
     "chai": "^4.1.2",
     "coveralls": "^3.0.2",
+    "eslint": "^6.7.1",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-node": "^10.0.0",
     "husky": "^3.0.5",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.2"
   },
   "peerDependencies": {
     "graphql": "^0.13.0 || ^14.0.0"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "examples/**",
+      "test/**",
+      ".**"
+    ],
+    "all": true
   }
 }

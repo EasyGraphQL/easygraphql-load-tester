@@ -1,11 +1,7 @@
-/* eslint-env mocha */
-/* eslint-disable no-new, no-unused-expressions */
-'use strict'
-
-const fs = require('fs')
-const path = require('path')
-const { expect } = require('chai')
-const EasyGraphQLTester = require('../lib')
+import { expect } from 'chai'
+import fs from 'fs'
+import path from 'path'
+import LoadTesting from '../src'
 
 const schema = fs.readFileSync(
   path.join(__dirname, 'schema', 'schema.gql'),
@@ -17,7 +13,7 @@ const search = fs.readFileSync(
 )
 
 describe('Query generator', () => {
-  it('Should initialize constructor', () => {
+  it('should initialize constructor', () => {
     const args = {
       getUserByUsername: {
         username: 'Test',
@@ -33,7 +29,7 @@ describe('Query generator', () => {
         username: 'test',
       },
     }
-    const loadTest = new EasyGraphQLTester(schema, args)
+    const loadTest = new LoadTesting(schema, args)
 
     const queries = loadTest.createQueries()
 
@@ -44,7 +40,7 @@ describe('Query generator', () => {
     expect(queries[queries.length - 1].name).to.includes('where: {')
   })
 
-  it('Should initialize constructor with custom query', () => {
+  it('should initialize constructor with custom query', () => {
     const args = {
       getUserByUsername: {
         username: 'Test',
@@ -66,29 +62,27 @@ describe('Query generator', () => {
         },
       },
     }
-    const loadTest = new EasyGraphQLTester(schema, args)
+    const loadTest = new LoadTesting(schema, args)
 
     const myQueries = [
-      {
-        name: 'myNewQuery',
-        query: `{
+      `{
           myNewQuery {
             test
           }
         }`,
-      },
     ]
-    const queries = loadTest.createQueries(myQueries, null, true)
+    const queries = loadTest.createQueries({
+      queries: myQueries,
+      onlyCustomQueries: true,
+    })
 
     expect(queries).to.exist
     expect(queries).to.be.a('array')
     expect(queries[0].name).to.includes('myNewQuery')
-    expect(queries[1].name).to.includes('getMe')
-    expect(queries[1].operation).to.be.eq('Query')
-    expect(queries[queries.length - 1].name).to.includes('createUser')
+    expect(queries[0].operation).to.be.eq('query')
   })
 
-  it('Should initialize constructor with selectedQueries queries', () => {
+  it('should initialize constructor with selectedQueries queries', () => {
     const args = {
       getUserByUsername: {
         username: 'Test',
@@ -98,9 +92,11 @@ describe('Query generator', () => {
         username: 'test',
       },
     }
-    const loadTest = new EasyGraphQLTester(schema, args)
+    const loadTest = new LoadTesting(schema, args)
 
-    const queries = loadTest.createQueries(null, ['getUserByUsername'])
+    const queries = loadTest.createQueries({
+      selectedQueries: ['getUserByUsername'],
+    })
 
     expect(queries).to.exist
     expect(queries).to.be.a('array')
@@ -109,13 +105,13 @@ describe('Query generator', () => {
     expect(queries[queries.length - 1].name).to.includes('getUserByUsername')
   })
 
-  it('Should support union', () => {
+  it('should support union', () => {
     const args = {
       search: {
         name: 'Test',
       },
     }
-    const loadTest = new EasyGraphQLTester(search, args)
+    const loadTest = new LoadTesting(search, args)
 
     const queries = loadTest.createQueries()
 
@@ -126,7 +122,7 @@ describe('Query generator', () => {
     expect(queries[0].query).to.includes('... on User')
   })
 
-  it('Should throw an error if a arg is not defined', () => {
+  it('should throw an error if a arg is not defined', () => {
     let error
     try {
       const args = {
@@ -135,7 +131,7 @@ describe('Query generator', () => {
         },
       }
 
-      const loadTest = new EasyGraphQLTester(schema, args)
+      const loadTest = new LoadTesting(schema, args)
       loadTest.createQueries()
     } catch (err) {
       error = err
@@ -147,12 +143,12 @@ describe('Query generator', () => {
     )
   })
 
-  it('Should throw an error if a arg is not defined', () => {
+  it('should throw an error if a arg is not defined', () => {
     let error
     try {
       const args = {}
 
-      const loadTest = new EasyGraphQLTester(search, args)
+      const loadTest = new LoadTesting(search, args)
       loadTest.createQueries()
     } catch (err) {
       error = err
@@ -164,7 +160,7 @@ describe('Query generator', () => {
     )
   })
 
-  it('Should throw an error if the name is missing k6', () => {
+  it('should throw an error if the name is missing k6', () => {
     let error
     try {
       const args = {
@@ -180,8 +176,8 @@ describe('Query generator', () => {
         },
       }
 
-      const loadTest = new EasyGraphQLTester(schema, args)
-      loadTest.k6(null)
+      const loadTest = new LoadTesting(schema, args)
+      loadTest.k6(null as any)
     } catch (err) {
       error = err
     }
@@ -190,7 +186,7 @@ describe('Query generator', () => {
     expect(error.message).to.be.eq('The k6 file name is missing')
   })
 
-  it('Should run k6', () => {
+  it('should run k6', () => {
     const args = {
       getUserByUsername: {
         username: 'Test',
@@ -207,11 +203,11 @@ describe('Query generator', () => {
       },
     }
 
-    const loadTest = new EasyGraphQLTester(schema, args)
+    const loadTest = new LoadTesting(schema, args)
     loadTest.k6('test.js')
   })
 
-  it('Should initialize constructor with only selectedQueries', () => {
+  it('should initialize constructor with only selectedQueries', () => {
     const customQuery = [
       `{
         getUserByUsername(username: "test") {
@@ -228,21 +224,43 @@ describe('Query generator', () => {
         username: 'test',
       },
     }
-    const loadTest = new EasyGraphQLTester(schema, args)
+    const loadTest = new LoadTesting(schema, args)
 
-    const queries = loadTest.createQueries(
-      customQuery,
-      ['getUserByUsername'],
-      null,
-      true
-    )
+    const queries = loadTest.createQueries({
+      queries: customQuery,
+      selectedQueries: ['getUserByUsername'],
+      onlyCustomQueries: true,
+    })
 
     expect(queries).to.exist
     expect(queries).to.be.a('array')
     expect(queries[0].name).to.includes('getUserByUsername')
   })
 
-  it('Should throw an error if custom queries is not an array', () => {
+  it('should create mutations', () => {
+    const args = {
+      createUser: {
+        input: {
+          name: 'demo',
+          email: 'demo',
+        },
+      },
+    }
+    const loadTest = new LoadTesting(schema, args)
+
+    const queries = loadTest.createQueries({
+      selectedQueries: ['createUser'],
+      withMutations: true,
+    })
+
+    expect(queries).to.exist
+    expect(queries).to.be.a('array')
+    expect(queries[0].name).to.includes(
+      'createUser with arguments: { input: {name: "demo", email: "demo"} }'
+    )
+  })
+
+  it('should throw an error if custom queries is not an array', () => {
     let error
     try {
       const customQuery = `query GetUserByUsername {
@@ -260,14 +278,13 @@ describe('Query generator', () => {
           username: 'test',
         },
       }
-      const loadTest = new EasyGraphQLTester(schema, args)
+      const loadTest = new LoadTesting(schema, args)
 
-      const queries = loadTest.createQueries(
-        customQuery,
-        ['GetUserByUsername'],
-        null,
-        true
-      )
+      loadTest.createQueries({
+        queries: customQuery as any,
+        selectedQueries: ['getUserByUsername'],
+        onlyCustomQueries: true,
+      })
     } catch (err) {
       error = err
     }

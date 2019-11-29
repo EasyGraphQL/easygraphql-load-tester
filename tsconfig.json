@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "*": ["types/*"] },
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es2015"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "strict": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": false
+  },
+  "include": ["src", "easygraphql-parser.d.ts"],
+  "exclude": ["node_modules", "**/__tests__/*"]
+}

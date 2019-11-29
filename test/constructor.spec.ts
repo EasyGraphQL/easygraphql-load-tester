@@ -1,11 +1,7 @@
-/* eslint-env mocha */
-/* eslint-disable no-new, no-unused-expressions */
-'use strict'
-
-const fs = require('fs')
-const path = require('path')
-const { expect } = require('chai')
-const EasyGraphQLTester = require('../lib')
+import { expect } from 'chai'
+import fs from 'fs'
+import path from 'path'
+import LoadTesting from '../src'
 
 const schema = fs.readFileSync(
   path.join(__dirname, 'schema', 'schema.gql'),
@@ -16,7 +12,7 @@ describe('Constructor', () => {
   it('Should fail if the schema is missing', () => {
     let error
     try {
-      new EasyGraphQLTester()
+      new LoadTesting(undefined as any, undefined as any)
     } catch (err) {
       error = err
     }
@@ -28,7 +24,7 @@ describe('Constructor', () => {
   it('Should fail if the schema is null', () => {
     let error
     try {
-      new EasyGraphQLTester(null)
+      new LoadTesting(undefined as any)
     } catch (err) {
       error = err
     }
@@ -38,7 +34,7 @@ describe('Constructor', () => {
   })
 
   it('Should initialize constructor', () => {
-    const tester = new EasyGraphQLTester(schema)
+    const tester = new LoadTesting(schema)
 
     expect(tester).to.exist
   })

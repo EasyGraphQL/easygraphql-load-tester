@@ -1,11 +1,20 @@
-/* eslint-disable valid-typeof */
-'use strict'
+import {
+  ParsedArgs,
+  ParsedField,
+  ParsedSchema,
+  ParsedType,
+} from 'easygraphql-parser'
+import isObject from 'lodash.isobject'
 
-const isObject = require('lodash.isobject')
+const MAX_DEEP_LEVEL = 4
 
-function getField(field, schema, maxDeepLevel = 5, deepLevel = 0) {
+export const getField = (
+  field: ParsedField,
+  schema: ParsedSchema,
+  deepLevel = 0
+) => {
   deepLevel++
-  if (deepLevel > maxDeepLevel) return
+  if (deepLevel > MAX_DEEP_LEVEL) return
 
   if (!schema[field.type]) {
     return field.name
@@ -17,10 +26,13 @@ function getField(field, schema, maxDeepLevel = 5, deepLevel = 0) {
     return field.name
   }
 
-  const fields = []
+  const fields: string[] = []
   nestedType.fields.forEach((field) => {
     if (schema[field.type]) {
-      fields.push(getField(field, schema, maxDeepLevel, deepLevel))
+      const nestedField = getField(field, schema, deepLevel)
+      if (nestedField) {
+        fields.push(nestedField)
+      }
     } else {
       fields.push(field.name)
     }
@@ -34,8 +46,12 @@ function getField(field, schema, maxDeepLevel = 5, deepLevel = 0) {
   return `${field.name} ${selectedFields}`
 }
 
-function createQueryArguments(args, userArgs, queryName) {
-  const queryArgs = []
+export const createQueryArguments = (
+  args: ParsedArgs[],
+  userArgs: any,
+  queryName: string
+) => {
+  const queryArgs: string[] = []
   args
     .filter((arg) => arg.noNull)
     .forEach((arg) => {
@@ -48,12 +64,12 @@ function createQueryArguments(args, userArgs, queryName) {
         )
       }
 
-      const selectedArg = userArgs[arg.name]
+      const selectedArg: string | number | boolean = userArgs[arg.name]
 
       let userArg
 
       if (isObject(selectedArg)) {
-        const nestedArgs = []
+        const nestedArgs: string[] = []
         for (const key of Object.keys(selectedArg)) {
           const arg =
             typeof selectedArg !== 'boolean' && typeof selectedArg !== 'number'
@@ -81,14 +97,20 @@ function createQueryArguments(args, userArgs, queryName) {
   return test
 }
 
-function createUnionQuery(nestedType, schema, queryName) {
-  const fields = []
+export const createUnionQuery = (
+  nestedType: ParsedType,
+  schema: ParsedSchema,
+  queryType: string
+) => {
+  const fields: string[] = []
   nestedType.fields.forEach((field) => {
     const createdField = getField(field, schema, 2)
-    fields.push(createdField)
+    if (createdField) {
+      fields.push(createdField)
+    }
   })
   const unionQuery = `
-    ... on ${queryName} {
+    ... on ${queryType} {
       ${fields.join(' ')}
     }
   `
@@ -96,7 +118,12 @@ function createUnionQuery(nestedType, schema, queryName) {
   return unionQuery
 }
 
-function createQueryToTest(fields, queryHeader, isMutation, name) {
+export const createQueryToTest = (
+  fields: string[],
+  queryHeader: string,
+  isMutation: boolean,
+  name: string
+) => {
   let selectedFields = ''
 
   if (fields.length > 0) {
@@ -129,11 +156,4 @@ function createQueryToTest(fields, queryHeader, isMutation, name) {
   }
 
   return queryToTest
-}
-
-module.exports = {
-  getField,
-  createQueryArguments,
-  createUnionQuery,
-  createQueryToTest,
 }
