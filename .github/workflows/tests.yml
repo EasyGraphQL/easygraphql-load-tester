@@ -13,8 +13,6 @@ jobs:
           node-version: 10.x
       - name: Install dependencies
         run: npm install
-      - name: Install GraphQL
-        run: npm install graphql
       - name: Build TS
         run: npm build
       - name: Check Prettier
