@@ -18,7 +18,7 @@ import {
   getField,
 } from './utils'
 
-export default class LoadTesting {
+export = class LoadTesting {
   private schema: ParsedSchema
   private arguments: { [name: string]: any }
   private queryField: string
@@ -120,15 +120,14 @@ export default class LoadTesting {
         const parsedQuery = parse(query)
         const operationNode = getOperationAST(parsedQuery, null)
 
-        const name =
-          operationNode?.name?.value ||
-          (operationNode?.selectionSet.selections[0] as any).name.value // check this
+        const name = (operationNode?.selectionSet.selections[0] as any).name
+          .value
 
         return {
           name,
           operation: operationNode && operationNode.operation,
           query,
-          variables: this.arguments[name],
+          variables: this.arguments[name] || {},
         }
       })
     }

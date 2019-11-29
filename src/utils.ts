@@ -131,7 +131,7 @@ export const createQueryString = ({
     name,
     query: newQuery,
     operation: isMutation ? 'Mutation' : 'Query',
-    variables,
+    variables: variables || {},
   }
 
   return queryToTest

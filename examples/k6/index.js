@@ -2,35 +2,32 @@
 
 const fs = require('fs')
 const path = require('path')
-const EasyGraphQLLoadTester = require('../../lib')
+const LoadTesting = require('../../lib')
 
 const familySchema = fs.readFileSync(path.join(__dirname, 'schema.gql'), 'utf8')
 
 const args = {
   getFamilyInfoByIsLocal: {
     isLocal: true,
-    test: '["a", "b"]',
+    test: ['a', 'b'],
     age: 10,
-    name: 'test'
+    name: 'test',
   },
   searchUser: {
-    name: 'demo'
-  }
+    name: 'demo',
+  },
 }
 
-const easyGraphQLLoadTester = new EasyGraphQLLoadTester(familySchema, args)
+const easyGraphQLLoadTester = new LoadTesting(familySchema, args)
 
 const queries = [
-  {
-    name: 'searchUser(name: "demo")',
-    query: `
-      {
-        searchUser(name: "demo") {
-          name
-        }
+  `
+    query SEARCH_USER($name: String!) {
+      searchUser(name: $name) {
+        name
       }
-    `
-  }
+    }
+  `,
 ]
 
 easyGraphQLLoadTester.k6('k6.js', {
@@ -38,5 +35,6 @@ easyGraphQLLoadTester.k6('k6.js', {
   selectedQueries: ['getFamilyInfo', 'searchUser'],
   vus: 10,
   duration: '10s',
-  queryFile: true
+  queryFile: true,
+  out: ['json=my_test_result.json'],
 })

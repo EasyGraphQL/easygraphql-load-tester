@@ -16,4 +16,5 @@ scenarios:
                 variables: '{{ $loopElement.variables }}'
           - log: '----------------------------------'
           - log: 'Sent a request to the {{ $loopElement.operation }}: {{ $loopElement.name }}'
+          - log: 'And variables {{ $loopElement.variables }}'
         over: cases

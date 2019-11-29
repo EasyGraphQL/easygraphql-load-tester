@@ -211,8 +211,8 @@ describe('Query generator', () => {
 
   it('should initialize constructor with only selectedQueries', () => {
     const customQuery = [
-      `{
-        getUserByUsername(username: "test") {
+      `query GetUsername($username: String!){
+        getUserByUsername(username: $username) {
           email
         }
       }`,
