@@ -2,7 +2,7 @@
 
 const fs = require('fs')
 const path = require('path')
-const EasyGraphQLLoadTester = require('../../lib')
+const LoadTesting = require('easygraphql-load-tester')
 
 const familySchema = fs.readFileSync(path.join(__dirname, 'schema.gql'), 'utf8')
 
@@ -11,23 +11,23 @@ const args = {
     isLocal: true,
     test: '["a", "b"]',
     age: 10,
-    name: 'test'
+    name: 'test',
   },
   searchUser: {
-    name: 'demo'
+    name: 'demo',
   },
   createUser: {
-    name: 'demo'
+    name: 'demo',
   },
   createCity: {
     input: {
       name: 'demo',
-      country: 'Demo'
-    }
-  }
+      country: 'Demo',
+    },
+  },
 }
 
-const easyGraphQLLoadTester = new EasyGraphQLLoadTester(familySchema, args)
+const easyGraphQLLoadTester = new LoadTesting(familySchema, args)
 
 const queries = [
   {
@@ -38,15 +38,15 @@ const queries = [
           name
         }
       }
-    `
-  }
+    `,
+  },
 ]
 
 const testCases = easyGraphQLLoadTester.artillery({
   customQueries: queries,
-  withMutations: true
+  withMutations: true,
 })
 
 module.exports = {
-  testCases
+  testCases,
 }

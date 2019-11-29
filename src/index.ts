@@ -13,7 +13,7 @@ import {
 } from './types/types'
 import {
   createQueryArguments,
-  createQueryToTest,
+  createQueryString,
   createUnionQuery,
   getField,
 } from './utils'
@@ -115,7 +115,7 @@ export default class LoadTesting {
       throw new Error('Custom queries and selected queries should be an array')
     }
 
-    if (onlyCustomQueries && queries) {
+    if (queries) {
       loadTestQueries = queries.map((query) => {
         const parsedQuery = parse(query)
         const operationNode = getOperationAST(parsedQuery, null)
@@ -131,7 +131,9 @@ export default class LoadTesting {
           variables: this.arguments[name],
         }
       })
+    }
 
+    if (onlyCustomQueries && queries) {
       if (selectedQueries) {
         loadTestQueries = loadTestQueries.filter((query) => {
           for (let i = 0; i < selectedQueries.length; i++) {
@@ -175,6 +177,8 @@ export default class LoadTesting {
   createOperation(query: ParsedField, isMutation: boolean) {
     let queryHeader = query.name
     let name = query.name
+    let operationName = query.name.toUpperCase()
+
     if (query.arguments.length) {
       const createdArgs = createQueryArguments(
         query.arguments,
@@ -182,15 +186,23 @@ export default class LoadTesting {
         query.name
       )
 
-      if (createdArgs && createdArgs.length) {
-        queryHeader = `${query.name}(${createdArgs})`
-        name = `${query.name} with arguments: { ${createdArgs.toString()} }`
+      if (createdArgs.variables.length && createdArgs.args.length) {
+        queryHeader = `${name}(${createdArgs.args.join(', ')})`
+        name = `${name} with arguments: { ${createdArgs.args.join(', ')} }`
+        operationName = `${operationName}(${createdArgs.variables.join(', ')})`
       }
     }
 
     // Check if the operation only request scalar type.
     if (['ID', 'String', 'Int', 'Float', 'Boolean'].indexOf(query.type) >= 0) {
-      return createQueryToTest([], queryHeader, isMutation, name)
+      return createQueryString({
+        fields: [],
+        queryHeader: queryHeader,
+        isMutation,
+        name,
+        operationName,
+        variables: this.arguments[query.name],
+      })
     }
 
     // Select the nested type from the object of types.
@@ -204,7 +216,14 @@ export default class LoadTesting {
         unionQueries.push(createUnionQuery(newNestedType, this.schema, type))
       })
 
-      return createQueryToTest(unionQueries, queryHeader, isMutation, name)
+      return createQueryString({
+        fields: unionQueries,
+        queryHeader: queryHeader,
+        isMutation,
+        name,
+        operationName,
+        variables: this.arguments[query.name],
+      })
     } else {
       const fields: string[] = []
       return nestedType.fields.map((field) => {
@@ -213,7 +232,14 @@ export default class LoadTesting {
           fields.push(createdField)
         }
 
-        return createQueryToTest(fields, queryHeader, isMutation, name)
+        return createQueryString({
+          fields,
+          queryHeader: queryHeader,
+          isMutation,
+          name,
+          operationName,
+          variables: this.arguments[query.name],
+        })
       })
     }
   }

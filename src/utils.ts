@@ -4,7 +4,7 @@ import {
   ParsedSchema,
   ParsedType,
 } from 'easygraphql-parser'
-import isObject from 'lodash.isobject'
+import { CreateQueryString } from './types/types'
 
 const MAX_DEEP_LEVEL = 4
 
@@ -51,50 +51,26 @@ export const createQueryArguments = (
   userArgs: any,
   queryName: string
 ) => {
+  const queryVariables: string[] = []
   const queryArgs: string[] = []
-  args
-    .filter((arg) => arg.noNull)
-    .forEach((arg) => {
-      if (!userArgs) {
-        throw new Error(`Error in ${queryName} - No query arguments defined`)
-      }
-      if (typeof userArgs[arg.name] === 'undefined' && arg.noNull) {
-        throw new Error(
-          `Error in ${queryName} - All required query arguments must be defined - missing ${arg.name}`
-        )
-      }
+  args.forEach((arg) => {
+    if (!userArgs) {
+      throw new Error(`Error in ${queryName} - No query arguments defined`)
+    }
+    if (typeof userArgs[arg.name] === 'undefined' && arg.noNull) {
+      throw new Error(
+        `Error in ${queryName} - All required query arguments must be defined - missing ${arg.name}`
+      )
+    }
 
-      const selectedArg: string | number | boolean = userArgs[arg.name]
+    queryVariables.push(`$${arg.name}: ${arg.type}${arg.noNull ? '!' : ''}`)
+    queryArgs.push(`${arg.name}: $${arg.name}`)
+  })
 
-      let userArg
-
-      if (isObject(selectedArg)) {
-        const nestedArgs: string[] = []
-        for (const key of Object.keys(selectedArg)) {
-          const arg =
-            typeof selectedArg !== 'boolean' && typeof selectedArg !== 'number'
-              ? `"${selectedArg[key]}"`
-              : selectedArg[key]
-          nestedArgs.push(`${key}: ${arg}`)
-        }
-        userArg = `{${nestedArgs.join(', ')}}`
-      } else if (
-        typeof selectedArg !== 'boolean' &&
-        typeof selectedArg !== 'number'
-      ) {
-        userArg = `"${userArgs[arg.name]}"`
-      } else {
-        userArg = selectedArg
-      }
-
-      queryArgs.push(`${arg.name}: ${userArg}`)
-    })
-
-  let test = queryArgs.join(', ')
-  test = test.replace(/"\[/g, '[')
-  test = test.replace(/\]"/g, ']')
-
-  return test
+  return {
+    variables: queryVariables,
+    args: queryArgs,
+  }
 }
 
 export const createUnionQuery = (
@@ -118,12 +94,14 @@ export const createUnionQuery = (
   return unionQuery
 }
 
-export const createQueryToTest = (
-  fields: string[],
-  queryHeader: string,
-  isMutation: boolean,
-  name: string
-) => {
+export const createQueryString = ({
+  fields,
+  queryHeader,
+  isMutation,
+  name,
+  operationName,
+  variables,
+}: CreateQueryString) => {
   let selectedFields = ''
 
   if (fields.length > 0) {
@@ -137,13 +115,13 @@ export const createQueryToTest = (
 
   if (!isMutation) {
     newQuery = `
-      {
+    query ${operationName} {
         ${queryHeader} ${selectedFields}
       }
     `
   } else {
     newQuery = `
-    mutation {
+    mutation ${operationName} {
         ${queryHeader} ${selectedFields}
       }
     `
@@ -153,6 +131,7 @@ export const createQueryToTest = (
     name,
     query: newQuery,
     operation: isMutation ? 'Mutation' : 'Query',
+    variables,
   }
 
   return queryToTest

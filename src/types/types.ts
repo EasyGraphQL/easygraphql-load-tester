@@ -39,5 +39,14 @@ export type LoadTestQuery = {
   name: string
   operation?: 'query' | 'mutation' | 'subscription' | null
   query: string
-  variables?: any
+  variables: any
+}
+
+export type CreateQueryString = {
+  fields: string[]
+  queryHeader: string
+  isMutation: boolean
+  name: string
+  operationName: string
+  variables: any
 }

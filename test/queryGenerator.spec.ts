@@ -37,7 +37,9 @@ describe('Query generator', () => {
     expect(queries).to.be.a('array')
     expect(queries[0].name).to.includes('getMe')
     expect(queries[queries.length - 1].name).to.includes('getUser')
-    expect(queries[queries.length - 1].name).to.includes('where: {')
+    expect(queries[queries.length - 1].name).to.includes(
+      'getUser with arguments: { where: $where }'
+    )
   })
 
   it('should initialize constructor with custom query', () => {
@@ -256,7 +258,7 @@ describe('Query generator', () => {
     expect(queries).to.exist
     expect(queries).to.be.a('array')
     expect(queries[0].name).to.includes(
-      'createUser with arguments: { input: {name: "demo", email: "demo"} }'
+      'createUser with arguments: { input: $input }'
     )
   })
 
