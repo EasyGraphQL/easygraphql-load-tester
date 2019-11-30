@@ -126,7 +126,7 @@ export = class LoadTesting {
         if (Array.isArray(this.arguments[name])) {
           return this.arguments[name].map((val) => ({
             name,
-            operation: operationNode && operationNode.operation,
+            operation: operationNode?.operation,
             query,
             variables: val || {},
           }))
@@ -134,7 +134,7 @@ export = class LoadTesting {
 
         return {
           name,
-          operation: operationNode && operationNode.operation,
+          operation: operationNode?.operation,
           query,
           variables: this.arguments[name] || {},
         }
