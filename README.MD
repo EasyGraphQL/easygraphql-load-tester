@@ -114,7 +114,7 @@ $ npm install artillery --saved-dev
 You should configure your `index.js` file:
 
 ```js
-''use strict'
+'use strict'
 
 const fs = require('fs')
 const path = require('path')
@@ -165,7 +165,6 @@ const testCases = easyGraphQLLoadTester.artillery({
 module.exports = {
   testCases,
 }
-
 ```
 
 ### Artillery options
