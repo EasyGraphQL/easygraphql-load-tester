@@ -296,4 +296,94 @@ describe('Query generator', () => {
       'Custom queries and selected queries should be an array'
     )
   })
+
+  it('should create same operation with different agrs on customQueries', () => {
+    const customQuery = [
+      `query GetUsername($username: String!){
+        getUserByUsername(username: $username) {
+          email
+        }
+      }`,
+    ]
+    const args = {
+      getUserByUsername: [
+        {
+          username: 'Test',
+          id: 1,
+        },
+        {
+          username: 'Test-2',
+          id: 2,
+        },
+      ],
+    }
+    const loadTest = new LoadTesting(schema, args)
+
+    const queries = loadTest.createQueries({
+      queries: customQuery,
+      selectedQueries: ['getUserByUsername'],
+      onlyCustomQueries: true,
+    })
+
+    expect(queries.length).to.be.eq(2)
+    expect(queries[0].variables.id).to.be.eq(1)
+    expect(queries[0].variables.username).to.be.eq('Test')
+    expect(queries[1].variables.id).to.be.eq(2)
+    expect(queries[1].variables.username).to.be.eq('Test-2')
+  })
+
+  it('should create same operation with different agrs', () => {
+    const args = {
+      getUserByUsername: [
+        {
+          username: 'Test',
+          id: 1,
+        },
+        {
+          username: 'Test-2',
+          id: 2,
+        },
+      ],
+    }
+    const loadTest = new LoadTesting(schema, args)
+
+    const queries = loadTest.createQueries({
+      selectedQueries: ['getUserByUsername'],
+    })
+
+    expect(queries.length).to.be.eq(10)
+    expect(queries[0].variables.id).to.be.eq(1)
+    expect(queries[0].variables.username).to.be.eq('Test')
+    expect(queries[1].variables.id).to.be.eq(2)
+    expect(queries[1].variables.username).to.be.eq('Test-2')
+  })
+
+  it('should throw an error if a arg is not defined in the array of args', () => {
+    let error
+    try {
+      const args = {
+        getUserByUsername: [
+          {
+            id: 1,
+          },
+          {
+            username: 'Test-2',
+            id: 2,
+          },
+        ],
+      }
+
+      const loadTest = new LoadTesting(schema, args)
+      loadTest.createQueries({
+        selectedQueries: ['getUserByUsername'],
+      })
+    } catch (err) {
+      error = err
+    }
+
+    expect(error).to.exist
+    expect(error.message).to.be.eq(
+      'Error in getUserByUsername - All required query arguments must be defined - missing username'
+    )
+  })
 })

@@ -42,7 +42,7 @@ export type LoadTestQuery = {
   variables: any
 }
 
-export type CreateQueryString = {
+export type CreateQuery = {
   fields: string[]
   queryHeader: string
   isMutation: boolean

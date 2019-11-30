@@ -12,8 +12,8 @@ import {
   SchemaTypes,
 } from './types/types'
 import {
+  createQuery,
   createQueryArguments,
-  createQueryString,
   createUnionQuery,
   getField,
 } from './utils'
@@ -123,6 +123,15 @@ export = class LoadTesting {
         const name = (operationNode?.selectionSet.selections[0] as any).name
           .value
 
+        if (Array.isArray(this.arguments[name])) {
+          return this.arguments[name].map((val) => ({
+            name,
+            operation: operationNode && operationNode.operation,
+            query,
+            variables: val || {},
+          }))
+        }
+
         return {
           name,
           operation: operationNode && operationNode.operation,
@@ -130,6 +139,7 @@ export = class LoadTesting {
           variables: this.arguments[name] || {},
         }
       })
+      loadTestQueries = flatten(loadTestQueries)
     }
 
     if (onlyCustomQueries && queries) {
@@ -168,6 +178,7 @@ export = class LoadTesting {
           }
         })
       })
+      loadTestQueries = flatten(loadTestQueries)
     }
 
     return flatten(loadTestQueries)
@@ -194,7 +205,7 @@ export = class LoadTesting {
 
     // Check if the operation only request scalar type.
     if (['ID', 'String', 'Int', 'Float', 'Boolean'].indexOf(query.type) >= 0) {
-      return createQueryString({
+      return createQuery({
         fields: [],
         queryHeader: queryHeader,
         isMutation,
@@ -215,7 +226,7 @@ export = class LoadTesting {
         unionQueries.push(createUnionQuery(newNestedType, this.schema, type))
       })
 
-      return createQueryString({
+      return createQuery({
         fields: unionQueries,
         queryHeader: queryHeader,
         isMutation,
@@ -231,7 +242,7 @@ export = class LoadTesting {
           fields.push(createdField)
         }
 
-        return createQueryString({
+        return createQuery({
           fields,
           queryHeader: queryHeader,
           isMutation,

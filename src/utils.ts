@@ -4,7 +4,7 @@ import {
   ParsedSchema,
   ParsedType,
 } from 'easygraphql-parser'
-import { CreateQueryString } from './types/types'
+import { CreateQuery } from './types/types'
 
 const MAX_DEEP_LEVEL = 4
 
@@ -53,17 +53,34 @@ export const createQueryArguments = (
 ) => {
   const queryVariables: string[] = []
   const queryArgs: string[] = []
-  args.forEach((arg) => {
-    if (!userArgs) {
-      throw new Error(`Error in ${queryName} - No query arguments defined`)
-    }
-    if (typeof userArgs[arg.name] === 'undefined' && arg.noNull) {
+
+  const validateArg = (userArg, arg: ParsedArgs) => {
+    if (typeof userArg === 'undefined' && arg.noNull) {
       throw new Error(
         `Error in ${queryName} - All required query arguments must be defined - missing ${arg.name}`
       )
     }
+  }
 
-    queryVariables.push(`$${arg.name}: ${arg.type}${arg.noNull ? '!' : ''}`)
+  args.forEach((arg) => {
+    if (Array.isArray(userArgs)) {
+      userArgs.forEach((userArg) => {
+        validateArg(userArg[arg.name], arg)
+      })
+    } else {
+      if (!userArgs) {
+        throw new Error(`Error in ${queryName} - No query arguments defined`)
+      }
+      validateArg(userArgs[arg.name], arg)
+    }
+
+    const variableDefinition = arg.isArray
+      ? `$${arg.name}: [${arg.type}${arg.noNullArrayValues ? '!' : ''}]${
+          arg.noNull ? '!' : ''
+        }`
+      : `$${arg.name}: ${arg.type}${arg.noNull ? '!' : ''}`
+
+    queryVariables.push(variableDefinition)
     queryArgs.push(`${arg.name}: $${arg.name}`)
   })
 
@@ -94,14 +111,14 @@ export const createUnionQuery = (
   return unionQuery
 }
 
-export const createQueryString = ({
+export const createQuery = ({
   fields,
   queryHeader,
   isMutation,
   name,
   operationName,
   variables,
-}: CreateQueryString) => {
+}: CreateQuery) => {
   let selectedFields = ''
 
   if (fields.length > 0) {
@@ -127,12 +144,19 @@ export const createQueryString = ({
     `
   }
 
-  const queryToTest = {
+  if (Array.isArray(variables)) {
+    return variables.map((val) => ({
+      name,
+      query: newQuery,
+      operation: isMutation ? 'Mutation' : 'Query',
+      variables: val || {},
+    }))
+  }
+
+  return {
     name,
     query: newQuery,
     operation: isMutation ? 'Mutation' : 'Query',
     variables: variables || {},
   }
-
-  return queryToTest
 }
