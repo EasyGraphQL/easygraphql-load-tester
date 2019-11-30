@@ -211,32 +211,61 @@ describe('Query generator', () => {
 
   it('should initialize constructor with only selectedQueries', () => {
     const customQuery = [
-      `query GetUsername($username: String!){
+      `query GET_USERNAME($username: String!){
         getUserByUsername(username: $username) {
           email
         }
       }`,
     ]
     const args = {
-      getUserByUsername: {
+      GET_USERNAME: {
         username: 'Test',
         id: 1,
-      },
-      isAdmin: {
-        username: 'test',
       },
     }
     const loadTest = new LoadTesting(schema, args)
 
     const queries = loadTest.createQueries({
       queries: customQuery,
-      selectedQueries: ['getUserByUsername'],
+      selectedQueries: ['GET_USERNAME'],
       onlyCustomQueries: true,
     })
 
     expect(queries).to.exist
     expect(queries).to.be.a('array')
-    expect(queries[0].name).to.includes('getUserByUsername')
+    expect(queries.length).to.be.eq(1)
+    expect(queries[0].name).to.includes('GET_USERNAME')
+    expect(queries[0].variables.username).to.be.eq('Test')
+    expect(queries[0].variables.id).to.be.eq(1)
+  })
+
+  it('should not set variables if the args name is not the same as the query name', () => {
+    const customQuery = [
+      `query GET_USERNAME($username: String!){
+        getUserByUsername(username: $username) {
+          email
+        }
+      }`,
+    ]
+    const args = {
+      GetUsername: {
+        username: 'Test',
+        id: 1,
+      },
+    }
+    const loadTest = new LoadTesting(schema, args)
+
+    const queries = loadTest.createQueries({
+      queries: customQuery,
+      selectedQueries: ['GET_USERNAME'],
+      onlyCustomQueries: true,
+    })
+
+    expect(queries).to.exist
+    expect(queries).to.be.a('array')
+    expect(queries.length).to.be.eq(1)
+    expect(queries[0].name).to.includes('GET_USERNAME')
+    expect(queries[0].variables.username).to.be.undefined
   })
 
   it('should create mutations', () => {
@@ -299,14 +328,14 @@ describe('Query generator', () => {
 
   it('should create same operation with different agrs on customQueries', () => {
     const customQuery = [
-      `query GetUsername($username: String!){
+      `query GET_USERNAME($username: String!){
         getUserByUsername(username: $username) {
           email
         }
       }`,
     ]
     const args = {
-      getUserByUsername: [
+      GET_USERNAME: [
         {
           username: 'Test',
           id: 1,
@@ -321,7 +350,7 @@ describe('Query generator', () => {
 
     const queries = loadTest.createQueries({
       queries: customQuery,
-      selectedQueries: ['getUserByUsername'],
+      selectedQueries: ['GET_USERNAME'],
       onlyCustomQueries: true,
     })
 

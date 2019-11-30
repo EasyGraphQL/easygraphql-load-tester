@@ -120,8 +120,9 @@ export = class LoadTesting {
         const parsedQuery = parse(query)
         const operationNode = getOperationAST(parsedQuery, null)
 
-        const name = (operationNode?.selectionSet.selections[0] as any).name
-          .value
+        const name =
+          operationNode?.name?.value ||
+          (operationNode?.selectionSet.selections[0] as any).name.value
 
         if (Array.isArray(this.arguments[name])) {
           return this.arguments[name].map((val) => ({
