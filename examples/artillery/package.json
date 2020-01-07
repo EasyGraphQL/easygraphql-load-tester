@@ -23,7 +23,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "artillery": "^1.6.0-26"
+    "artillery": "^1.6.0-26",
+    "merge-graphql-schemas": "^1.7.3"
   },
   "dependencies": {
     "easygraphql-load-tester": "^1.0.0-beta.0"
