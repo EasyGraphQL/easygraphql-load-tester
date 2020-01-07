@@ -24,5 +24,8 @@
   "license": "MIT",
   "devDependencies": {
     "easygraphql-now": "0.0.6"
+  },
+  "dependencies": {
+    "merge-graphql-schemas": "^1.7.3"
   }
 }
