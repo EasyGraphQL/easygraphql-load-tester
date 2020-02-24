@@ -360,7 +360,7 @@ easyGraphQLLoadTester.k6('k6.js', {
 ### K6 options
 
 ```ts
-type ArtilleryOptions = {
+type K6Options = {
   customQueries?: string[]
   onlyCustomQueries?: boolean
   selectedQueries?: string[]
