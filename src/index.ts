@@ -87,8 +87,8 @@ export = class LoadTesting {
       stdio: 'inherit',
       shell: true,
       env: {
-        VUS: selectedVus.toString(), // check as string
-        DURATION: selectedDuration,
+        K6_VUS: selectedVus.toString(), // check as string
+        K6_DURATION: selectedDuration,
       },
     })
 
