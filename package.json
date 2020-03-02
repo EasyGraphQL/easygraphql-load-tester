@@ -1,6 +1,6 @@
 {
   "name": "easygraphql-load-tester",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Create GrapgQL queries to use with test loaders.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
