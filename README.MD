@@ -435,7 +435,7 @@ You can select the duration for your tests, just pass to the options
 #### Iterations
 
 You can select the number of iterations to run by passing
-`iterations <ITERATIONS>`. It should be an integer.
+`iterations: <ITERATIONS>`. It should be an integer.
 
 #### Out
 
