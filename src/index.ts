@@ -78,6 +78,7 @@ export = class LoadTesting {
     const selectedVus = options?.vus || ''
 
     const selectedDuration = options?.duration || ''
+    const iterations = options?.iterations?.toString() || ''
 
     fs.writeFileSync(queryFileName, JSON.stringify(queries))
 
@@ -89,6 +90,7 @@ export = class LoadTesting {
       env: {
         K6_VUS: selectedVus.toString(), // check as string
         K6_DURATION: selectedDuration,
+        K6_ITERATIONS: iterations,
       },
     })
 
