@@ -25,6 +25,7 @@ export type ArtilleryOptions = {
 export type K6Options = ArtilleryOptions & {
   vus?: number
   duration?: string
+  iterations?: number
   out?: string[]
 }
 
