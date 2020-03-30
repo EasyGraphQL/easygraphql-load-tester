@@ -40,7 +40,7 @@
     "@types/lodash.flatten": "^4.4.6",
     "@types/lodash.isobject": "^3.0.6",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.12.14",
+    "@types/node": "^13.9.6",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^2.9.0",
     "chai": "^4.1.2",
