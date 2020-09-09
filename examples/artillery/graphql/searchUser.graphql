@@ -1,0 +1,5 @@
+query SEARCH_USER($name: String!) {
+  searchUser(name: $name) {
+    name
+  }
+}
