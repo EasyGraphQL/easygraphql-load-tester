@@ -1,0 +1,8 @@
+query FAMILY_INFO {
+  getFamilyInfo {
+    father {
+      name
+    }
+    mother
+  }
+}

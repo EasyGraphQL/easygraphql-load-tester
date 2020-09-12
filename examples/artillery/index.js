@@ -1,10 +1,12 @@
+'use strict'
+
 const fs = require('fs')
 const path = require('path')
 const LoadTesting = require('easygraphql-load-tester')
 const { fileLoader } = require('merge-graphql-schemas')
 
 const schema = fs.readFileSync(path.join(__dirname, 'schema.gql'), 'utf8')
-const queries = fileLoader(path.join(__dirname, './graphql', '**/*.graphql'))
+const queries = fileLoader(path.join(__dirname, './graphql'))
 
 const args = {
   SEARCH_USER: [

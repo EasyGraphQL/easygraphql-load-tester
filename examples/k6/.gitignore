@@ -1,2 +1,4 @@
 /node_modules
 .vscode
+easygraphql-load-tester-queries.json
+my_test_result.json

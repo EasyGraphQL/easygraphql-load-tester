@@ -4,7 +4,7 @@
   "description": "easygraphql-load-tester example using Artillery.io",
   "main": "index.js",
   "scripts": {
-    "now": "npx easygraphql-now schema.gql --local -p=5000 --graphiql",
+    "now": "easygraphql-now schema.gql --local -p=5000 --graphiql",
     "easygraphql-load-tester": "artillery run artillery.yml",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,9 +24,10 @@
   "license": "MIT",
   "devDependencies": {
     "artillery": "^1.6.0-26",
-    "merge-graphql-schemas": "^1.7.3"
+    "easygraphql-now": "0.0.6"
   },
   "dependencies": {
-    "easygraphql-load-tester": "^1.0.0-beta.0"
+    "easygraphql-load-tester": "^2.0.3",
+    "merge-graphql-schemas": "^1.7.3"
   }
 }
