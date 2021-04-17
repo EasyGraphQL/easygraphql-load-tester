@@ -1,4 +1,5 @@
 import { expect } from 'chai'
+const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql')
 import fs from 'fs'
 import path from 'path'
 import LoadTesting from '../src'
@@ -13,6 +14,29 @@ const search = fs.readFileSync(
 )
 
 describe('Query generator', () => {
+  it('should initialize constructor with GraphQL js', () => {
+    const schema2 = new GraphQLSchema({
+      query: new GraphQLObjectType({
+        name: 'RootQueryType',
+        fields: {
+          hello: {
+            type: GraphQLString,
+            resolve() {
+              return 'world'
+            },
+          },
+        },
+      }),
+    })
+
+    const loadTest = new LoadTesting(schema2)
+
+    const queries = loadTest.createQueries()
+    expect(queries).to.exist
+    expect(queries).to.be.a('array')
+    expect(queries[0].name).to.includes('hello')
+  })
+
   it('should initialize constructor', () => {
     const args = {
       getUserByUsername: {
