@@ -34,9 +34,23 @@ declare module 'easygraphql-parser' {
     implementedTypes: string[]
   }
 
+  export type SchemaDefinition = {
+    query?: {
+      type: string
+      operation: 'query'
+      field: string
+    }
+    mutation?: {
+      type: string
+      operation: 'mutation'
+      field: string
+    }
+  }
+
   export type ParsedSchema = {
     Query?: ParsedType
     Mutation?: ParsedType
+    schemaDefinition?: SchemaDefinition
     [name: string]: ParsedType
   }
 

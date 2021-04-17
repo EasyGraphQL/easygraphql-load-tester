@@ -30,9 +30,9 @@ export = class LoadTesting {
 
     this.schema = schemaParser(schema)
     this.arguments = args
-    this.queryField = (schema as any)?.schemaDefinition?.query?.field || 'Query'
+    this.queryField = this.schema.schemaDefinition?.query?.field || 'Query'
     this.mutationField =
-      (schema as any)?.schemaDefinition?.mutation?.field || 'Mutation'
+      this.schema.schemaDefinition?.mutation?.field || 'Mutation'
   }
 
   artillery(options: ArtilleryOptions = {}) {
