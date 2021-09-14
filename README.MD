@@ -118,7 +118,7 @@ You should configure your `index.js` file:
 
 const fs = require('fs')
 const path = require('path')
-const LoadTesting = require('../../lib')
+const LoadTesting = require('easygraphql-load-tester')
 
 const familySchema = fs.readFileSync(path.join(__dirname, 'schema.gql'), 'utf8')
 
@@ -317,7 +317,7 @@ You should configure your `index.js` file:
 
 const fs = require('fs')
 const path = require('path')
-const LoadTesting = require('../../lib')
+const LoadTesting = require('easygraphql-load-tester')
 
 const familySchema = fs.readFileSync(path.join(__dirname, 'schema.gql'), 'utf8')
 
